@@ -1,5 +1,6 @@
 package com.pongshy.assistant.service;
 
+import com.pongshy.assistant.model.request.BookUpdateRequest;
 import org.springframework.http.ResponseEntity;
 
 import javax.xml.ws.Response;
@@ -17,4 +18,6 @@ public interface TestService {
     public ResponseEntity<?> insertIntoMongodbTest();
 
     public ResponseEntity<?> getAllRecords();
+
+    public ResponseEntity<?> updateBook(BookUpdateRequest request);
 }

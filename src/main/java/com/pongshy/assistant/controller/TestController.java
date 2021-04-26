@@ -1,10 +1,12 @@
 package com.pongshy.assistant.controller;
 
+import com.pongshy.assistant.model.request.BookUpdateRequest;
 import com.pongshy.assistant.service.TestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.xml.ws.Response;
 
 /**
  * @ClassName: TestController
@@ -30,5 +32,10 @@ public class TestController {
     @GetMapping("/getAll")
     public ResponseEntity<?> getAllRecords() {
         return testService.getAllRecords();
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<?> updateBook(@RequestBody BookUpdateRequest request) {
+        return testService.updateBook(request);
     }
 }

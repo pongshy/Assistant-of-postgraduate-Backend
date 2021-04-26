@@ -1,9 +1,11 @@
 package com.pongshy.assistant.model.mongodb;
 
+import com.pongshy.assistant.model.response.Node;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: Book
@@ -30,6 +32,16 @@ public class Book {
     private Date createTime;
 
     private Date updateTime;
+
+    private List<Node> nodes;
+
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
+    }
 
     public String getId() {
         return id;
