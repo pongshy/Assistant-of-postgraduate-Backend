@@ -41,7 +41,9 @@ public class TaskResponse {
 
     private Integer period_time;
 
-    private Tag tag;
+    private TagResponse tag;
 
     private String parentId;
+
+    private Integer period_deadline;
 }

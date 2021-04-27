@@ -35,4 +35,39 @@ public enum Color {
         }
         return color;
     }
+
+    public static Integer getImp(String color) {
+        Integer imp = -1;
+
+
+        if (Color.red.toString().equals(color)) {
+            imp = 0;
+        } else if (Color.yellow.toString().equals(color)) {
+            imp = 1;
+        } else if (Color.blue.toString().equals(color)) {
+            imp = 2;
+        } else if (Color.green.toString().equals(color)) {
+            imp = 3;
+        }
+        return imp;
+    }
+
+    public static String getImportant(Integer i) {
+        if (i.equals(0) || i.equals(1)) {
+            return "重要";
+        } else if (i.equals(2) || i.equals(3)) {
+            return "不重要";
+        }
+        return null;
+    }
+
+    public static String getEmergency(Integer i) {
+        if (i.equals(0) || i.equals(2)) {
+            return "紧急";
+        } else if (i.equals(1) || i.equals(3)) {
+            return "不紧急";
+        }
+        return null;
+    }
+
 }

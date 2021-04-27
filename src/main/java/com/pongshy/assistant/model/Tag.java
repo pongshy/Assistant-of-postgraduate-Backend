@@ -1,5 +1,6 @@
 package com.pongshy.assistant.model;
 
+import com.pongshy.assistant.model.myEnum.Color;
 import lombok.Data;
 
 /**

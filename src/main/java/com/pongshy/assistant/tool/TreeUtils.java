@@ -51,6 +51,7 @@ public class TreeUtils {
                 task.setEndTime(taskItem.getEndTime());
                 task.setStartTime(taskItem.getStartTime());
                 task.setParentId(taskItem.getParentId());
+                task.setTag(taskItem.getTag());
 
                 for (TaskItem tmp : taskItemList) {
                     if (tmp.getParentId().equals(taskItem.getId())) {

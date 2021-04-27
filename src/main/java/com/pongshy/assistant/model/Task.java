@@ -1,6 +1,7 @@
 package com.pongshy.assistant.model;
 
 import com.pongshy.assistant.model.mongodb.TaskItem;
+import com.pongshy.assistant.model.response.TagResponse;
 import com.pongshy.assistant.model.response.TaskResponse;
 import com.pongshy.assistant.tool.TimeTool;
 import lombok.Data;
@@ -38,7 +39,7 @@ public class Task {
 
     private List<Task> children;
 
-    private Tag tag;
+    private TagResponse tag;
 
     public void addChild(TaskItem taskItem) {
         if (children == null) {
@@ -48,6 +49,14 @@ public class Task {
         BeanUtils.copyProperties(taskItem, task);
         task.setEndTime(taskItem.getEndTime());
         task.setStartTime(taskItem.getStartTime());
+        if (taskItem.getTag().getTag_name() != null) {
+            this.tag.setTag_name(taskItem.getTag().getTag_name());
+        }
+        this.tag.setColor(taskItem.getTag().getColor());
         children.add(task);
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = new TagResponse(tag);
     }
 }

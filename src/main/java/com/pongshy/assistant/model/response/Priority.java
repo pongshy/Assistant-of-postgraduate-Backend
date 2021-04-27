@@ -17,8 +17,14 @@ public class Priority {
 
     private Integer imp;
 
+    private String important;
+
+    private String emergency;
+
     public Priority(Integer imp) {
         this.color = Color.getColor(imp);
+        this.important = Color.getImportant(imp);
+        this.emergency = Color.getEmergency(imp);
         this.imp = imp;
     }
 }

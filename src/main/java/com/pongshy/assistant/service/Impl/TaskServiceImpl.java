@@ -3,10 +3,12 @@ package com.pongshy.assistant.service.Impl;
 import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.exception.EmAllException;
 import com.pongshy.assistant.model.Result;
+import com.pongshy.assistant.model.Tag;
 import com.pongshy.assistant.model.Task;
 import com.pongshy.assistant.model.mongodb.TaskItem;
 import com.pongshy.assistant.model.request.TaskRequest;
 import com.pongshy.assistant.model.response.Priority;
+import com.pongshy.assistant.model.response.TagResponse;
 import com.pongshy.assistant.model.response.TaskResponse;
 import com.pongshy.assistant.service.TaskService;
 import com.pongshy.assistant.tool.TaskTool;
@@ -127,9 +129,10 @@ public class TaskServiceImpl implements TaskService {
             }
             tmp.setParentId(task.getParentId());
             tmp.setPeriod_time((int)(task.getEndTime().getTime() - task.getStartTime().getTime()) / (1000 * 3600 * 24));
+            tmp.setPeriod_deadline(TimeTool.getDeadline(task.getEndTime()));
             tmp.setFinishedTask(TaskTool.getFinishedTaskCount(task));
             tmp.setPriority(new Priority(task.getPriority()));
-            tmp.setTag(task.getTag());
+            tmp.setTag(new TagResponse(task.getTag()));
             tmp.setTaskName(task.getTaskName());
 
             responses.add(tmp);
@@ -220,9 +223,10 @@ public class TaskServiceImpl implements TaskService {
             tmp.setAllTasks(0);
             tmp.setParentId(task.getParentId());
             tmp.setPeriod_time((int)(task.getEndTime().getTime() - task.getStartTime().getTime()) / (1000 * 3600 * 24));
+            tmp.setPeriod_deadline(TimeTool.getDeadline(task.getEndTime()));
             tmp.setFinishedTask(0);
             tmp.setPriority(new Priority(task.getPriority()));
-            tmp.setTag(task.getTag());
+            tmp.setTag(new TagResponse(task.getTag()));
             tmp.setTaskName(task.getTaskName());
 
             responses.add(tmp);

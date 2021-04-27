@@ -154,6 +154,24 @@ public class TimeTool {
     }
 
     /**
+     * @Description: 获取结束时间到现在还剩多少天
+     * @Method: [date]
+     * @Return: java.lang.Integer
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/4/27 21:18
+     */
+    public static Integer getDeadline(Date date) {
+        Date now = new Date(System.currentTimeMillis());
+        if (date.before(now)) {
+            return 0;
+        }
+        Integer deadline = 0;
+        deadline = (int)(date.getTime() - now.getTime()) / (1000* 3600 * 24);
+        return deadline;
+    }
+
+    /**
      * @Description: 时单位转时分单位格式
      * @Param: [hour]
      * @return: java.lang.String
