@@ -1,22 +1,35 @@
 package com.pongshy.assistant;
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.dialect.helper.HsqldbDialect;
+import com.pongshy.assistant.exception.AllException;
+import com.pongshy.assistant.model.MsgFeeling;
 import com.pongshy.assistant.model.TestObject;
-import com.pongshy.assistant.tool.TreeUtils;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.pongshy.assistant.tool.*;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import sun.security.krb5.internal.crypto.HmacSha1Aes256CksumType;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 class AssistantApplicationTests {
 
+
+    @Value("${wx.Token}")
+    public String Token;
+
+    @Value("${wx.EncodingAESKey}")
+    public String EncodingAESKey;
+
+    @Value("${wx.AppID}")
+    public String AppID;
+
+    @Value("${wx.AppSecret}")
+    public String AppSecret;
+
     @Test
-    void contextLoads() {
+    void contextLoads() throws IOException, AllException {
 
 //        List<TestObject> testList = new ArrayList<>();
 //        testList.add(new TestObject("1","上海","0"));
@@ -30,8 +43,9 @@ class AssistantApplicationTests {
 //
 //        List<TestObject> list = TreeUtils.buildTree(testList);
 //        System.out.println(list);
-
-
+        System.out.println("access_token: " + ApiTool.getAccessToken(AppID, AppSecret));
+        MsgFeeling msgFeeling = new MsgFeeling("今天天气真好!");
+        System.out.println(JwtTokenTool.jwtData(EncodingAESKey, "123456", msgFeeling));
     }
 
 }
