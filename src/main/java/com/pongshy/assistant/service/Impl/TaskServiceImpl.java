@@ -193,7 +193,7 @@ public class TaskServiceImpl implements TaskService {
         Query query = Query.query(Criteria.where("_id").is(taskModifyRequest.getId()));
         Update update = Update.update("taskName", taskModifyRequest.getTaskName())
                 .set("priority", taskModifyRequest.getPriority())
-                .set("isFinish", taskModifyRequest.getIsFinished())
+                .set("isFinish", taskModifyRequest.getIsFinish())
                 .set("startTime", TimeTool.stringToDate(taskModifyRequest.getStartTime()))
                 .set("endTime", TimeTool.stringToDate(taskModifyRequest.getEndTime()))
                 .set("description", taskModifyRequest.getDescription())

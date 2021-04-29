@@ -26,7 +26,7 @@ public class TaskModifyRequest {
 
     private String endTime;
 
-    private Integer isFinished;
+    private Integer isFinish;
 
     private String description;
 
