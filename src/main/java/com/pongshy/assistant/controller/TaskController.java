@@ -1,6 +1,7 @@
 package com.pongshy.assistant.controller;
 
 import com.pongshy.assistant.model.Result;
+import com.pongshy.assistant.model.request.TaskModifyRequest;
 import com.pongshy.assistant.model.request.TaskRequest;
 import com.pongshy.assistant.model.response.TaskResponse;
 import com.pongshy.assistant.service.TaskService;
@@ -94,10 +95,16 @@ public class TaskController {
      * @Author: pongshy
      * @Date: 2021/4/26 19:15
      */
-    @ApiOperation(value = "修改任务，但还没有写好")
+    @ApiOperation(value = "修改任务接口")
     @PostMapping("/modify")
-    public Result modifyTask(@RequestBody TaskResponse taskResponse) {
-        return taskService.modifyTheTask(taskResponse);
+    public Result modifyTask(@RequestBody TaskModifyRequest taskModifyRequest) {
+        return taskService.modifyTheTask(taskModifyRequest);
     }
+
+//    @ApiOperation(value = "获得")
+//    @GetMapping("/refresh/{id}")
+//    public Result getTaskDetails(@PathVariable(value = "id") String id) {
+//
+//    }
 
 }

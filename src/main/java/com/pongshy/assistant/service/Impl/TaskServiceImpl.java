@@ -6,6 +6,7 @@ import com.pongshy.assistant.model.Result;
 import com.pongshy.assistant.model.Tag;
 import com.pongshy.assistant.model.Task;
 import com.pongshy.assistant.model.mongodb.TaskItem;
+import com.pongshy.assistant.model.request.TaskModifyRequest;
 import com.pongshy.assistant.model.request.TaskRequest;
 import com.pongshy.assistant.model.response.Priority;
 import com.pongshy.assistant.model.response.TagResponse;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -187,9 +189,20 @@ public class TaskServiceImpl implements TaskService {
      * @Date: 2021/4/26 19:16
      */
     @Override
-    public Result modifyTheTask(TaskResponse taskResponse) {
+    public Result modifyTheTask(TaskModifyRequest taskModifyRequest) {
+        Query query = Query.query(Criteria.where("_id").is(taskModifyRequest.getId()));
+        Update update = Update.update("taskName", taskModifyRequest.getTaskName())
+                .set("priority", taskModifyRequest.getPriority())
+                .set("isFinish", taskModifyRequest.getIsFinished())
+                .set("startTime", TimeTool.stringToDate(taskModifyRequest.getStartTime()))
+                .set("endTime", TimeTool.stringToDate(taskModifyRequest.getEndTime()))
+                .set("description", taskModifyRequest.getDescription())
+                .set("tag.color", taskModifyRequest.getTag().getColor())
+                .set("tag.tag_name", taskModifyRequest.getTag().getTag_name());
 
-        return null;
+        mongoTemplate.updateFirst(query, update, TaskItem.class);
+
+        return Result.success("更新成功");
     }
 
     /*
@@ -204,7 +217,7 @@ public class TaskServiceImpl implements TaskService {
     public Result getSpecificTasks(String wechatId, String parentId) {
         Criteria criteria = Criteria
                 .where("wechatId").is(wechatId)
-                .where("parentId").is(parentId);
+                .and("parentId").is(parentId);
         Query query = Query.query(criteria)
                 .with(Sort.by(
                         Sort.Order.asc("isFinish"),

@@ -1,6 +1,7 @@
 package com.pongshy.assistant.service;
 
 import com.pongshy.assistant.model.Result;
+import com.pongshy.assistant.model.request.TaskModifyRequest;
 import com.pongshy.assistant.model.request.TaskRequest;
 import com.pongshy.assistant.model.response.TaskResponse;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public interface TaskService {
      * @Author: pongshy
      * @Date: 2021/4/26 19:16
      */
-    Result modifyTheTask(TaskResponse taskResponse);
+    Result modifyTheTask(TaskModifyRequest taskModifyRequest);
 
     /*
      * @Description: 获取指定父任务下的子任务

@@ -28,6 +28,12 @@ class AssistantApplicationTests {
     @Value("${wx.AppSecret}")
     public String AppSecret;
 
+    @Value("${baidu.ApiKey}")
+    public String baiduApiKey;
+
+    @Value("${baidu.SecretKey}")
+    public String baiduSecretKey;
+
     @Test
     void contextLoads() throws IOException, AllException {
 
@@ -43,9 +49,11 @@ class AssistantApplicationTests {
 //
 //        List<TestObject> list = TreeUtils.buildTree(testList);
 //        System.out.println(list);
-        System.out.println("access_token: " + ApiTool.getAccessToken(AppID, AppSecret));
-        MsgFeeling msgFeeling = new MsgFeeling("今天天气真好!");
-        System.out.println(JwtTokenTool.jwtData(EncodingAESKey, "123456", msgFeeling));
+//        System.out.println("access_token: " + ApiTool.getAccessToken(AppID, AppSecret));
+//        MsgFeeling msgFeeling = new MsgFeeling("今天天气真好!");
+//        System.out.println(JwtTokenTool.jwtData(EncodingAESKey, "123456", msgFeeling));
+        String access_token = ApiTool.getBaiduAccessToken(baiduApiKey, baiduSecretKey);
+        System.out.println(ApiTool.getFeeling(access_token, "今天天气不错"));
     }
 
 }
