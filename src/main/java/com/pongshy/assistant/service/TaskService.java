@@ -74,4 +74,14 @@ public interface TaskService {
      * @Date: 2021/4/26 21:43
      */
     Result getSpecificTasks(String wechatId, String parentId);
+
+    /*
+     * @Description: 获取今日任务
+     * @Method: [openid]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/4/30 19:06
+     */
+    Result getTodayTasks(String openid);
 }

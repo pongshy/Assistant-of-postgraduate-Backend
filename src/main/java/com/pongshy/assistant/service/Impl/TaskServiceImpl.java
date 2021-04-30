@@ -15,6 +15,7 @@ import com.pongshy.assistant.service.TaskService;
 import com.pongshy.assistant.tool.TaskTool;
 import com.pongshy.assistant.tool.TimeTool;
 import com.pongshy.assistant.tool.TreeUtils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -246,5 +248,52 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return Result.success(responses);
+    }
+
+    /*
+     * @Description: 获取今日任务
+     * @Method: [openid]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/4/30 19:06
+     */
+    @Override
+    public Result getTodayTasks(String openid) {
+        Date now = TimeTool.todayCreate().getTime();
+        log.info(now.toString());
+        Query query = Query.query(
+                Criteria.where("wechatId").is(openid)
+                        .and("startTime").lte(now)
+                        .and("endTime").gte(now)
+                        .and("parentId").ne("0")
+                        .and("isFinish").ne(1)
+                )
+                .with(Sort.by(Sort.Order.desc("createTime")));
+
+        List<TaskItem> taskItemList = mongoTemplate.find(query, TaskItem.class);
+        List<TaskResponse> responseList = new ArrayList<>();
+
+        for (TaskItem task : taskItemList) {
+            TaskResponse tmp = new TaskResponse();
+
+            tmp.setId(task.getId());
+            tmp.setStartTime(TimeTool.dateWithoutHMS(task.getStartTime()));
+            tmp.setEndTime(TimeTool.dateWithoutHMS(task.getEndTime()));
+            tmp.setDescription(task.getDescription());
+            tmp.setIsFinish(task.getIsFinish());
+            tmp.setAllTasks(0);
+            tmp.setParentId(task.getParentId());
+            tmp.setPeriod_time((int)((task.getEndTime().getTime() - task.getStartTime().getTime()) / (1000 * 3600 * 24)));
+            tmp.setPeriod_deadline(TimeTool.getDeadline(task.getEndTime()));
+            tmp.setFinishedTask(0);
+            tmp.setPriority(new Priority(task.getPriority()));
+            tmp.setTag(new TagResponse(task.getTag()));
+            tmp.setTaskName(task.getTaskName());
+
+            responseList.add(tmp);
+        }
+
+        return Result.success(responseList);
     }
 }

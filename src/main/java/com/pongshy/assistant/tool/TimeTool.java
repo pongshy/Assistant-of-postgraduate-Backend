@@ -167,7 +167,7 @@ public class TimeTool {
             return 0;
         }
         Integer deadline = 0;
-        deadline = (int)(date.getTime() - now.getTime()) / (1000* 3600 * 24);
+        deadline = (int)((date.getTime() - now.getTime()) / (1000* 3600 * 24));
         return deadline;
     }
 

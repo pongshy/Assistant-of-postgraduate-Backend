@@ -101,10 +101,18 @@ public class TaskController {
         return taskService.modifyTheTask(taskModifyRequest);
     }
 
-//    @ApiOperation(value = "获得")
-//    @GetMapping("/refresh/{id}")
-//    public Result getTaskDetails(@PathVariable(value = "id") String id) {
-//
-//    }
+    /*
+     * @Description: 获取今日任务
+     * @Method: [openid]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/4/30 19:06
+     */
+    @ApiOperation(value = "获取今日任务")
+    @GetMapping("/today/{openid}")
+    public Result getTodayTasks(@PathVariable(value = "openid") String openid) {
+        return taskService.getTodayTasks(openid);
+    }
 
 }
