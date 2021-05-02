@@ -39,10 +39,16 @@ public class FeelController {
         return feelService.getImageAndWord(openid);
     }
 
-    @ApiOperation(value = "修改每日心情")
+    @ApiOperation(value = "修改用户图片和句子")
     @PostMapping("/modify")
     public Result modifyFeeling(@RequestBody FeelModifyRequest feelRequest) {
         return feelService.modifyFeel(feelRequest);
+    }
+
+    @ApiOperation(value = "删除用户图片和句子")
+    @GetMapping("/delete/{id}")
+    public Result deleteImageAndWords(@PathVariable(value = "id") String id) {
+        return feelService.deleteFeel(id);
     }
 
 

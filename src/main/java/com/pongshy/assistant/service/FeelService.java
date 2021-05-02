@@ -44,4 +44,14 @@ public interface FeelService {
      **/
     Result modifyFeel(FeelModifyRequest request);
 
+    /*
+     * @Description: 删除指定文字和图片
+     * @Param: [id]
+     * @return: com.pongshy.assistant.model.Result
+     * @Author: pongshy
+     * @Date: 2021/5/2
+     * @Version: V1.0
+     **/
+    Result deleteFeel(String id);
+
 }

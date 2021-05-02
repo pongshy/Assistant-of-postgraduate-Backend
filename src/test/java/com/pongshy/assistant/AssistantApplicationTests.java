@@ -3,6 +3,7 @@ package com.pongshy.assistant;
 import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.model.MsgFeeling;
 import com.pongshy.assistant.model.TestObject;
+import com.pongshy.assistant.model.mongodb.Feel;
 import com.pongshy.assistant.tool.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,8 +53,8 @@ class AssistantApplicationTests {
 //        System.out.println("access_token: " + ApiTool.getAccessToken(AppID, AppSecret));
 //        MsgFeeling msgFeeling = new MsgFeeling("今天天气真好!");
 //        System.out.println(JwtTokenTool.jwtData(EncodingAESKey, "123456", msgFeeling));
-        String access_token = ApiTool.getBaiduAccessToken(baiduApiKey, baiduSecretKey);
-        System.out.println(ApiTool.getFeeling(access_token, "今天天气不错"));
+//        String access_token = ApiTool.getBaiduAccessToken(baiduApiKey, baiduSecretKey);
+//        System.out.println(ApiTool.getFeeling(access_token, "今天天气不错"));
     }
 
 }

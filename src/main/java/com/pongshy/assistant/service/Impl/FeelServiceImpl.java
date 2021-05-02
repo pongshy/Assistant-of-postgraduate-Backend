@@ -93,4 +93,20 @@ public class FeelServiceImpl implements FeelService {
 
         return Result.success("修改成功");
     }
+
+    /*
+     * @Description: 删除指定文字和图片
+     * @Param: [id]
+     * @return: com.pongshy.assistant.model.Result
+     * @Author: pongshy
+     * @Date: 2021/5/2
+     * @Version: V1.0
+     **/
+    @Override
+    public Result deleteFeel(String id) {
+        Query query = Query.query(Criteria.where("id").is(id));
+
+        mongoTemplate.remove(query, Feel.class);
+        return Result.success("删除成功");
+    }
 }
