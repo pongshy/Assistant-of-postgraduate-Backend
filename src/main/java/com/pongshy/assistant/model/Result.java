@@ -25,6 +25,10 @@ public class Result<T> {
 
     private T data;
 
+    public Result() {
+
+    }
+
 
     public Result(HttpStatus status,
                   String msg
@@ -59,6 +63,15 @@ public class Result<T> {
         return new Result(ex);
     }
 
+    public static Result error(String msg, Integer code) {
+        Result result = new Result();
+
+        result.setMessage(msg);
+        result.setCode(code);
+        result.setTimestamp(TimeTool.DateToString(new Date(System.currentTimeMillis())));
+        result.setData(null);
+        return result;
+    }
 
 
 }

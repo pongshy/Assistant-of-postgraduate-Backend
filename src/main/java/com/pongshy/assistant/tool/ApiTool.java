@@ -118,7 +118,14 @@ public class ApiTool {
         }
     }
 
-
+    /*
+     * @Description: 获取情感分析结果
+     * @Param: [access_token, words]
+     * @return: java.lang.String
+     * @Author: pongshy
+     * @Date: 2021/4/30
+     * @Version: V1.0
+     **/
     public static String getFeeling(String access_token, String words) throws IOException {
         String url = "https://aip.baidubce.com/rpc/2.0/nlp/v1/sentiment_classify?charset=UTF-8" +
                 "&access_token=" + access_token;

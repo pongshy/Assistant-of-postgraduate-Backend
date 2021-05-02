@@ -1,5 +1,6 @@
 package com.pongshy.assistant.tool;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -183,5 +184,9 @@ public class TimeTool {
                 "时" +
                 (int) ((hour - (int) hour) * 60) +
                 "分";
+    }
+
+    public static String getNowStrTimeOnlyYMD() {
+        return DateToString(todayCreate().getTime());
     }
 }
