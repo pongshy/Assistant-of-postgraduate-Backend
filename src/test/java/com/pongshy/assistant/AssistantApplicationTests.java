@@ -4,6 +4,7 @@ import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.model.MsgFeeling;
 import com.pongshy.assistant.model.TestObject;
 import com.pongshy.assistant.model.mongodb.Feel;
+import com.pongshy.assistant.model.myEnum.Color;
 import com.pongshy.assistant.tool.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;

@@ -84,4 +84,12 @@ public class HomePageController {
     }
 
 
+    @ApiOperation(value = "选择植物")
+    @GetMapping("/plant")
+    public Result setPlant(@RequestParam(value = "plantId") Integer plantId,
+                           @RequestParam(value = "openid") String openid) {
+        return null;
+    }
+
+
 }

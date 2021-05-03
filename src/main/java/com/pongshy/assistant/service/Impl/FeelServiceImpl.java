@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -71,6 +72,9 @@ public class FeelServiceImpl implements FeelService {
                 ));
 
         Feel feel = mongoTemplate.findOne(query, Feel.class);
+        if (ObjectUtils.isEmpty(feel)) {
+            return Result.success(feel);
+        }
         FeelResponse response = new FeelResponse();
         BeanUtils.copyProperties(feel, response);
         return Result.success(response);
