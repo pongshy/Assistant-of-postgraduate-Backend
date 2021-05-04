@@ -1,11 +1,15 @@
 package com.pongshy.assistant.service.Impl;
 
+import com.pongshy.assistant.exception.AllException;
+import com.pongshy.assistant.exception.EmAllException;
 import com.pongshy.assistant.model.Result;
 import com.pongshy.assistant.model.mongodb.Feel;
+import com.pongshy.assistant.model.mongodb.SoulSoup;
 import com.pongshy.assistant.model.request.FeelModifyRequest;
 import com.pongshy.assistant.model.request.FeelRequest;
 import com.pongshy.assistant.model.response.FeelResponse;
 import com.pongshy.assistant.service.FeelService;
+import com.pongshy.assistant.tool.ApiTool;
 import com.pongshy.assistant.tool.TimeTool;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
@@ -17,8 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 /**
  * @ClassName: FeelServiceImpl
@@ -77,6 +84,25 @@ public class FeelServiceImpl implements FeelService {
         }
         FeelResponse response = new FeelResponse();
         BeanUtils.copyProperties(feel, response);
+        Integer sentiment = 0;
+        try {
+            sentiment = Integer.parseInt(
+                    ApiTool.getFeeling(ApiTool.access_token, response.getWords())
+            );
+        } catch (IOException e) {
+            return Result.error(new AllException(EmAllException.INTERNAL_ERROR, "百度Api出错"));
+        }
+        Query query1 = Query.query(Criteria.where("id").exists(true));
+        List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
+        long count = mongoTemplate.count(query1, SoulSoup.class);
+        Random random = new Random();
+
+        int rand = random.nextInt((int)count);
+        String sentence = soups.get(rand).getSentence();
+
+        response.setSentence(sentence);
+        response.setSentiment(sentiment);
+
         return Result.success(response);
     }
 

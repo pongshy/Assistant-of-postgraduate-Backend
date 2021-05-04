@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.sql.Time;
@@ -114,6 +115,10 @@ public class TaskServiceImpl implements TaskService {
                         Sort.Order.asc("isFinish"),
                         Sort.Order.desc("createTime")));
         List<TaskItem> taskItemList = mongoTemplate.find(query, TaskItem.class);
+        if (ObjectUtils.isEmpty(taskItemList)) {
+            return Result.success(null);
+        }
+
         HashMap<String, Task> taskMap = TreeUtils.hashMapTask(taskItemList);
         List<TaskResponse> responses = new ArrayList<>();
 
@@ -272,6 +277,9 @@ public class TaskServiceImpl implements TaskService {
                 .with(Sort.by(Sort.Order.desc("createTime")));
 
         List<TaskItem> taskItemList = mongoTemplate.find(query, TaskItem.class);
+        if (ObjectUtils.isEmpty(taskItemList)) {
+            return Result.success(null);
+        }
         List<TaskResponse> responseList = new ArrayList<>();
 
         for (TaskItem task : taskItemList) {

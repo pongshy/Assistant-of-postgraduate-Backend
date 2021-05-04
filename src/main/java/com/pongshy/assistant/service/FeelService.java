@@ -4,6 +4,8 @@ import com.pongshy.assistant.model.Result;
 import com.pongshy.assistant.model.request.FeelModifyRequest;
 import com.pongshy.assistant.model.request.FeelRequest;
 
+import java.io.IOException;
+
 /**
  * @ClassName: FeelService
  * @Description: 心情模块实现类接口

@@ -33,7 +33,7 @@ public class FeelController {
         return feelService.commitFeelAndWords(feelRequest);
     }
 
-    @ApiOperation(value = "获取当天用户的图片和心情句子")
+    @ApiOperation(value = "获取当天用户的图片和心情句子，以及情感分析后的心情状态与鼓励的话")
     @GetMapping("/get/{openid}")
     public Result getImageAndWords(@PathVariable(value = "openid") String openid) {
         return feelService.getImageAndWord(openid);

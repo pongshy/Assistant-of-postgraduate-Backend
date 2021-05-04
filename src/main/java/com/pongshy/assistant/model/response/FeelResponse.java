@@ -20,4 +20,8 @@ public class FeelResponse {
     private String imageUrl;
 
     private String openid;
+
+    private Integer sentiment;
+
+    private String sentence;
 }

@@ -34,6 +34,7 @@ public class AccessTokenGetFromStarting implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         String access_token = ApiTool.getBaiduAccessToken(baiduApiKey, baiduSecretKey);
+        ApiTool.access_token = access_token;
         log.info("access_token已更新");
         log.info("access_token: " + access_token);
     }

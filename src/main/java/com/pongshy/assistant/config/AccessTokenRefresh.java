@@ -39,6 +39,7 @@ public class AccessTokenRefresh {
     @Scheduled(cron = "0 0 1 15 * ?")
     public void refreshAccessToken() throws IOException, AllException {
         String access_token = ApiTool.getBaiduAccessToken(baiduApiKey, baiduSecretKey);
+        ApiTool.access_token = access_token;
         log.info("access_token已更新");
         log.info("access_token: " + access_token);
     }
