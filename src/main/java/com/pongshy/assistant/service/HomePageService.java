@@ -51,4 +51,24 @@ public interface HomePageService {
      */
     Result getSentence();
 
+    /*
+     * @Description: 选择植物
+     * @Param: [plantId, openid]
+     * @return: com.pongshy.assistant.model.Result
+     * @Author: pongshy
+     * @Date: 2021/5/4
+     * @Version: V1.0
+     **/
+    Result choosePlant(Integer plantId, String openid);
+
+    /*
+     * @Description: 获取当天设定的植物和任务完成百分比
+     * @Param: [openid]
+     * @return: com.pongshy.assistant.model.Result
+     * @Author: pongshy
+     * @Date: 2021/5/4
+     * @Version: V1.0
+     **/
+    Result getPlantAndPercent(String openid);
+
 }

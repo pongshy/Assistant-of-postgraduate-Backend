@@ -88,7 +88,13 @@ public class HomePageController {
     @GetMapping("/plant")
     public Result setPlant(@RequestParam(value = "plantId") Integer plantId,
                            @RequestParam(value = "openid") String openid) {
-        return null;
+        return homePageService.choosePlant(plantId, openid);
+    }
+
+    @ApiOperation(value = "获取植物和当天任务完成百分比")
+    @GetMapping("/getplant/{openid}")
+    public Result getPlantAndPercent(@PathVariable(value = "openid") String openid) {
+        return homePageService.getPlantAndPercent(openid);
     }
 
 
