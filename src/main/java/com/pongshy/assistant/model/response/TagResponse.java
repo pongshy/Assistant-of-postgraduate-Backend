@@ -27,7 +27,7 @@ public class TagResponse {
 
     public TagResponse(TagResponse tagResponse) {
         this.color = tagResponse.getColor();
-        this.tag_name = tagResponse.getColor();
+        this.tag_name = tagResponse.getTag_name();
         this.imp = Color.getImp(this.color);
         this.important = Color.getImportant(this.imp);
         this.emergency = Color.getEmergency(this.imp);
