@@ -174,7 +174,8 @@ public class HomePageServiceImpl implements HomePageService {
         }
         PlantResponse response = new PlantResponse();
 
-        response.setPlant(PlantEnum.getPlant(plant.getPlantId()));
+//        response.setPlant(PlantEnum.getPlant(plant.getPlantId()));
+        response.setPlant(plant.getPlantId());
 
         Date now = TimeTool.todayCreate().getTime();
         log.info(now.toString());

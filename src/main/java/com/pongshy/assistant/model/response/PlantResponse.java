@@ -13,7 +13,7 @@ import lombok.Data;
 public class PlantResponse {
 
 
-    private String plant;
+    private Integer plant;
 
     private Double percent;
 
