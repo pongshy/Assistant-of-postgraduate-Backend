@@ -25,6 +25,6 @@ public class PersonalResponse {
 
     private Double percent = 0.0;
 
-    private Integer isLogin;
+    private Integer isLogin = 0;
 
 }

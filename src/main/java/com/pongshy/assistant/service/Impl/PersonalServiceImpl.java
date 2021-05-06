@@ -21,6 +21,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -69,7 +70,10 @@ public class PersonalServiceImpl implements PersonalService {
 //            return Result.error(e);
 //        }
         if (ObjectUtils.isEmpty(userInfo)) {
-            response.setIsLogin(0);
+//            response.setIsLogin(0);
+            return Result.success(response);
+        }
+        if (userInfo.getWname() == null || userInfo.getWimage() == null) {
             return Result.success(response);
         }
         response.setImageUrl(userInfo.getWimage());
