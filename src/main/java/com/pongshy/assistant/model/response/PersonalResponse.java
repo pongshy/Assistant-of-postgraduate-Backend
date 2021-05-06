@@ -17,13 +17,13 @@ public class PersonalResponse {
 
     private String imageUrl;
 
-    private Integer taskNum;
+    private Integer taskNum = 0;
 
-    private Integer finishedTaskNum;
+    private Integer finishedTaskNum = 0;
 
-    private Integer signDays;
+    private Integer signDays = 0;
 
-    private Double percent;
+    private Double percent = 0.0;
 
     private Integer isLogin;
 

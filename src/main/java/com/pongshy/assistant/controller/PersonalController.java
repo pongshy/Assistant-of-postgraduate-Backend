@@ -40,6 +40,12 @@ public class PersonalController {
         return personalService.saveCountdownDay(dayRequest);
     }
 
+    @ApiOperation(value = "修改倒数日和标题")
+    @PostMapping("/modifyday")
+    public Result modifyDayAndTitle(@RequestBody DayRequest dayRequest) {
+        return personalService.modifyDayAndTitle(dayRequest);
+    }
+
 
 
 

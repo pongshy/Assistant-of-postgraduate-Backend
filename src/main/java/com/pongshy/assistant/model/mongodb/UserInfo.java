@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @Author: pongshy
  * @Date: 2021/4/29 10:44
  **/
-@Document(collection = "User")
-public class User {
+@Document(collection = "UserInfo")
+public class UserInfo {
 
 
     @Id

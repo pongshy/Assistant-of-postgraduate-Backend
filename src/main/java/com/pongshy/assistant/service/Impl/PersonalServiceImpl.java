@@ -6,16 +6,19 @@ import com.pongshy.assistant.model.Result;
 import com.pongshy.assistant.model.mongodb.CountDown;
 import com.pongshy.assistant.model.mongodb.Sign;
 import com.pongshy.assistant.model.mongodb.TaskItem;
+import com.pongshy.assistant.model.mongodb.UserInfo;
 import com.pongshy.assistant.model.request.DayRequest;
 import com.pongshy.assistant.model.response.CountdownDayResponse;
 import com.pongshy.assistant.model.response.PersonalResponse;
 import com.pongshy.assistant.service.PersonalService;
 import com.pongshy.assistant.tool.NumTool;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -54,8 +57,23 @@ public class PersonalServiceImpl implements PersonalService {
     public Result getPersonalInformation(String openid) {
         PersonalResponse response = new PersonalResponse();
         Query query = Query.query(Criteria.where("wechatId").is(openid));
-
+        Query query2 = Query.query(Criteria.where("_id").is(openid));
+        UserInfo userInfo = mongoTemplate.findOne(query2, UserInfo.class);
         List<TaskItem> taskItemList = mongoTemplate.find(query, TaskItem.class);
+
+//        try {
+//            if (ObjectUtils.isEmpty(userInfo)) {
+//                throw new AllException(EmAllException.BAD_REQUEST, "用户不存在");
+//            }
+//        } catch (AllException e) {
+//            return Result.error(e);
+//        }
+        if (ObjectUtils.isEmpty(userInfo)) {
+            response.setIsLogin(0);
+            return Result.success(response);
+        }
+        response.setImageUrl(userInfo.getWimage());
+        response.setName(userInfo.getWname());
         if (ObjectUtils.isEmpty(taskItemList)) {
             response.setTaskNum(0);
             response.setFinishedTaskNum(0);
@@ -76,6 +94,7 @@ public class PersonalServiceImpl implements PersonalService {
         Query query1 = Query.query(Criteria.where("openid").is(openid));
         int cnt = (int) mongoTemplate.count(query1, Sign.class);
         response.setSignDays(cnt);
+        response.setIsLogin(1);
 
         return Result.success(response);
     }
@@ -135,5 +154,23 @@ public class PersonalServiceImpl implements PersonalService {
         }
 
         return Result.success(response);
+    }
+
+    /*
+     * @Description: 修改倒数日和title
+     * @Method: [dayRequest]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/6 22:17
+     */
+    @Override
+    public Result modifyDayAndTitle(DayRequest dayRequest) {
+        Query query = Query.query(Criteria.where("openid").is(dayRequest.getOpenid()));
+        Update update = Update.update("title", dayRequest.getTitle())
+                .set("endDay", dayRequest.getEndDay());
+        mongoTemplate.updateMulti(query, update, CountDown.class);
+
+        return Result.success((Object) 1);
     }
 }

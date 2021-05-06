@@ -4,13 +4,16 @@ import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.model.MsgFeeling;
 import com.pongshy.assistant.model.TestObject;
 import com.pongshy.assistant.model.mongodb.Feel;
+import com.pongshy.assistant.model.mongodb.UserInfo;
 import com.pongshy.assistant.model.myEnum.Color;
 import com.pongshy.assistant.model.myEnum.PlantEnum;
 import com.pongshy.assistant.tool.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,6 +44,9 @@ class AssistantApplicationTests {
     @Value("${baidu.SecretKey}")
     public String baiduSecretKey;
 
+    @Resource
+    private MongoTemplate mongoTemplate;
+
     @Test
     void contextLoads() throws IOException, AllException {
 
@@ -65,14 +71,19 @@ class AssistantApplicationTests {
 //        System.out.println(PlantEnum.carrot.toString());
 //        System.out.println(PlantEnum.valueOf("carrot"));
 
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date endDay = df.parse("2021-10-1");
-            System.out.println(TimeTool.getDeadline(endDay));
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//        try {
+//            Date endDay = df.parse("2021-10-1");
+//            System.out.println(TimeTool.getDeadline(endDay));
+//
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+        UserInfo userInfo = new UserInfo();
+        userInfo.setOpenId("123456");
+        userInfo.setWname("test");
+        mongoTemplate.save(userInfo, "UserInfo");
 
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
 }

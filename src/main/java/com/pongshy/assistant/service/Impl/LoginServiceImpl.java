@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.exception.EmAllException;
 import com.pongshy.assistant.model.Result;
-import com.pongshy.assistant.model.mongodb.User;
+import com.pongshy.assistant.model.mongodb.UserInfo;
+import com.pongshy.assistant.model.request.WechatInforRequest;
+import com.pongshy.assistant.model.response.LoginResponse;
 import com.pongshy.assistant.service.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -69,20 +72,25 @@ public class LoginServiceImpl implements LoginService {
             log.info("errcode = " + errcode);
             if (errcode == null) {
                 String openid = jsonObject.getString("openid");
+                String session_key = jsonObject.getString("session_key");
                 log.info(openid);
                 Query query = Query.query(Criteria.where("openId").is(openid));
-                List<User> userList = mongoTemplate.find(query, User.class);
+                List<UserInfo> userList = mongoTemplate.find(query, UserInfo.class);
 //                UserDO userDO = userDOMapper.selectByPrimaryKey(openid);
                 if (userList.size() == 0) {
-                    User record = new User();
+                    UserInfo record = new UserInfo();
 
                     record.setOpenId(openid);
-                    mongoTemplate.save(record, User.class.getName());
+                    mongoTemplate.save(record, "UserInfo");
 //                    if (userDOMapper.insertSelective(record) == 0) {
 //                        throw new AllException(EmAllException.DATABASE_ERROR, "数据库操作异常");
 //                    }
                 }
-                return Result.success((Object) openid);
+                LoginResponse loginResponse = new LoginResponse();
+                loginResponse.setOpenid(openid);
+                loginResponse.setSession_key(session_key);
+//                return Result.success((Object) openid);
+                return Result.success(loginResponse);
             } else if (errcode.equals("-1")) {
                 throw new AllException(EmAllException.ErrorCode, "系统繁忙，此时请开发者稍候再试");
             } else if (errcode.equals("40029")) {
@@ -111,5 +119,25 @@ public class LoginServiceImpl implements LoginService {
 //                    HttpStatus.OK);
             return Result.error(new AllException(EmAllException.INTERNAL_ERROR));
         }
+    }
+
+    /*
+     * @Description: 保存用户的微信名和头像
+     * @Method: [wechatInforRequest]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/6 20:21
+     */
+    @Override
+    public Result updateUserInfor(WechatInforRequest wechatInforRequest) {
+        Integer i = 0;
+        Query query = Query.query(Criteria.where("_id").is(wechatInforRequest.getOpenid()));
+        Update update = Update.update("wname", wechatInforRequest.getWname())
+                .set("wimage", wechatInforRequest.getWimage());
+        mongoTemplate.updateMulti(query, update, UserInfo.class, "UserInfo");
+        i = 1;
+
+        return Result.success(i);
     }
 }

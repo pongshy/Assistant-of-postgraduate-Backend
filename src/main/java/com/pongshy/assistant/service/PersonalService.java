@@ -42,4 +42,14 @@ public interface PersonalService {
      **/
     Result getCountdownDayAndTitle(String openid);
 
+    /*
+     * @Description: 修改倒数日和title
+     * @Method: [dayRequest]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/6 22:17
+     */
+    Result modifyDayAndTitle(DayRequest dayRequest);
+
 }

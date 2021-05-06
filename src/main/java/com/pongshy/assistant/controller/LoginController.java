@@ -1,14 +1,13 @@
 package com.pongshy.assistant.controller;
 
 import com.pongshy.assistant.model.Result;
+import com.pongshy.assistant.model.request.WechatInforRequest;
 import com.pongshy.assistant.service.LoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -33,4 +32,12 @@ public class LoginController {
     public Result login(@PathVariable("code") String code) {
         return loginService.loginWX(code);
     }
+
+
+    @ApiOperation(value = "保存微信名和微信头像")
+    @PostMapping("/update")
+    public Result updateUserInfor(@RequestBody @Validated WechatInforRequest wechatInforRequest) {
+        return loginService.updateUserInfor(wechatInforRequest);
+    }
+
 }
