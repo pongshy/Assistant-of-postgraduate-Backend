@@ -142,6 +142,13 @@ public class HomePageServiceImpl implements HomePageService {
      **/
     @Override
     public Result choosePlant(Integer plantId, String openid) {
+        Query query = Query.query(Criteria.where("openid").is(openid)
+                .and("createTime").is(TimeTool.getNowStrTimeOnlyYMD()));
+        List<Plant> plants = mongoTemplate.find(query, Plant.class);
+        if (!ObjectUtils.isEmpty(plants)) {
+            return Result.success("已选择过植物");
+        }
+
         Plant plant = new Plant();
 
         plant.setPlantId(plantId);
@@ -169,7 +176,7 @@ public class HomePageServiceImpl implements HomePageService {
                         )
                 );
         Plant plant = mongoTemplate.findOne(query, Plant.class);
-        if (ObjectUtils.isEmpty(plant)) {
+        if (ObjectUtils.isEmpty(plant) || !plant.getCreateTime().equals(TimeTool.getNowStrTimeOnlyYMD())) {
             return Result.success(null);
         }
         PlantResponse response = new PlantResponse();
