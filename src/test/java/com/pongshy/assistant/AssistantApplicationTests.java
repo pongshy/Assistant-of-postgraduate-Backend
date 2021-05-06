@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -57,9 +61,18 @@ class AssistantApplicationTests {
 //        System.out.println(JwtTokenTool.jwtData(EncodingAESKey, "123456", msgFeeling));
 //        String access_token = ApiTool.getBaiduAccessToken(baiduApiKey, baiduSecretKey);
 //        System.out.println(ApiTool.getFeeling(access_token, "今天天气不错"));
-        System.out.println(PlantEnum.carrot);
-        System.out.println(PlantEnum.carrot.toString());
-        System.out.println(PlantEnum.valueOf("carrot"));
+//        System.out.println(PlantEnum.carrot);
+//        System.out.println(PlantEnum.carrot.toString());
+//        System.out.println(PlantEnum.valueOf("carrot"));
+
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date endDay = df.parse("2021-10-1");
+            System.out.println(TimeTool.getDeadline(endDay));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 }

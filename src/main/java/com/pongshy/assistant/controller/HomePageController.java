@@ -3,7 +3,9 @@ package com.pongshy.assistant.controller;
 import com.pongshy.assistant.model.Result;
 import com.pongshy.assistant.model.request.SentenceRequest;
 import com.pongshy.assistant.service.HomePageService;
+import com.pongshy.assistant.service.PersonalService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class HomePageController {
 
     @Resource
     private HomePageService homePageService;
+
+    @Resource
+    private PersonalService personalService;
 
     /*
      * @Description: 签到接口
@@ -95,6 +100,13 @@ public class HomePageController {
     @GetMapping("/getplant/{openid}")
     public Result getPlantAndPercent(@PathVariable(value = "openid") String openid) {
         return homePageService.getPlantAndPercent(openid);
+    }
+
+    @ApiOperation(value = "获取倒数日和title")
+    @GetMapping("/getcount/{openid}")
+    @ApiImplicitParam(name = "openid", value = "用户openid", dataType = "String", required = true)
+    public Result getCountdownDay(@PathVariable(value = "openid") String openid) {
+        return personalService.getCountdownDayAndTitle(openid);
     }
 
 
