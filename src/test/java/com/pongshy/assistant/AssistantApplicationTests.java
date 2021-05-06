@@ -5,6 +5,7 @@ import com.pongshy.assistant.model.MsgFeeling;
 import com.pongshy.assistant.model.TestObject;
 import com.pongshy.assistant.model.mongodb.Feel;
 import com.pongshy.assistant.model.myEnum.Color;
+import com.pongshy.assistant.model.myEnum.PlantEnum;
 import com.pongshy.assistant.tool.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +57,9 @@ class AssistantApplicationTests {
 //        System.out.println(JwtTokenTool.jwtData(EncodingAESKey, "123456", msgFeeling));
 //        String access_token = ApiTool.getBaiduAccessToken(baiduApiKey, baiduSecretKey);
 //        System.out.println(ApiTool.getFeeling(access_token, "今天天气不错"));
+        System.out.println(PlantEnum.carrot);
+        System.out.println(PlantEnum.carrot.toString());
+        System.out.println(PlantEnum.valueOf("carrot"));
     }
 
 }

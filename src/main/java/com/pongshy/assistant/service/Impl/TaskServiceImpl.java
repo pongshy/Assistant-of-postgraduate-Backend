@@ -272,7 +272,7 @@ public class TaskServiceImpl implements TaskService {
                         .and("startTime").lte(now)
                         .and("endTime").gte(now)
                         .and("parentId").ne("0")
-                        .and("isFinish").ne(1)
+//                        .and("isFinish").ne(1)
                 )
                 .with(Sort.by(Sort.Order.desc("createTime")));
 
