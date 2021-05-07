@@ -2,6 +2,10 @@ package com.pongshy.assistant.service;
 
 import com.pongshy.assistant.model.Result;
 import com.pongshy.assistant.model.request.DayRequest;
+import com.pongshy.assistant.model.request.DiaryHistoryRequest;
+import com.pongshy.assistant.model.request.PlantHistoryRequest;
+
+import java.text.ParseException;
 
 /**
  * @ClassName: PersonalService
@@ -51,5 +55,25 @@ public interface PersonalService {
      * @Date: 2021/5/6 22:17
      */
     Result modifyDayAndTitle(DayRequest dayRequest);
+
+    /*
+     * @Description: 根据日期返回用户所选择的植物和任务完成百分比
+     * @Method: [plantHistoryRequest]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/7 22:13
+     */
+    Result getHistoryPlant(PlantHistoryRequest plantHistoryRequest);
+
+    /*
+     * @Description: 根据日期返回用户的心情日记
+     * @Method: [diaryHistoryRequest]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/7 23:05
+     */
+    Result getHistoryDiary(DiaryHistoryRequest diaryHistoryRequest);
 
 }

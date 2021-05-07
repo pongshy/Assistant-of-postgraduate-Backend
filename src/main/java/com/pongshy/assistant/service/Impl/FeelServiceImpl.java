@@ -64,7 +64,7 @@ public class FeelServiceImpl implements FeelService {
     }
 
     /*
-     * @Description: 获取用户心情图片和文字
+     * @Description: 获取当天用户心情图片和文字
      * @Param: [openid]
      * @return: com.pongshy.assistant.model.Result
      * @Author: pongshy
@@ -73,35 +73,63 @@ public class FeelServiceImpl implements FeelService {
      **/
     @Override
     public Result getImageAndWord(String openid) {
-        Query query = Query.query(Criteria.where("openid").is(openid))
+        FeelResponse response = new FeelResponse();
+        String now = TimeTool.getNowStrTimeOnlyYMD();
+        Query query = Query.query(
+                Criteria.where("openid").is(openid)
+                        .and("createTime").is(now)
+        )
                 .with(Sort.by(
                         Sort.Order.desc("createTime")
                 ));
 
         Feel feel = mongoTemplate.findOne(query, Feel.class);
+        // 如果不存在
         if (ObjectUtils.isEmpty(feel)) {
-            return Result.success(feel);
+            return Result.success(response);
         }
-        FeelResponse response = new FeelResponse();
+        // 存在的情况下
         BeanUtils.copyProperties(feel, response);
-        Integer sentiment = 0;
-        try {
-            sentiment = Integer.parseInt(
-                    ApiTool.getFeeling(ApiTool.access_token, response.getWords())
-            );
-        } catch (IOException e) {
-            return Result.error(new AllException(EmAllException.INTERNAL_ERROR, "百度Api出错"));
+        // 心情
+        if (feel.getSentiment() == null) {
+            Integer sentiment = 0;
+            try {
+                // 情感分析
+                sentiment = Integer.parseInt(
+                        ApiTool.getFeeling(ApiTool.access_token, response.getWords())
+                );
+                // 保存
+                Query query1 = Query.query(Criteria.where("openid").is(openid).and("createTime").is(now));
+                Update update = Update.update("sentiment", sentiment);
+                mongoTemplate.updateMulti(query1, update, Feel.class);
+                response.setSentiment(sentiment);
+
+            } catch (IOException e) {
+                return Result.error(new AllException(EmAllException.INTERNAL_ERROR, "百度Api出错"));
+            }
+        } else {
+            response.setSentiment(feel.getSentiment());
         }
-        Query query1 = Query.query(Criteria.where("id").exists(true));
-        List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
-        long count = mongoTemplate.count(query1, SoulSoup.class);
-        Random random = new Random();
+        // 保存句子
+        // 如果句子没有被保存，则保存
+        if (feel.getSentence() == null) {
+            Query query1 = Query.query(Criteria.where("id").exists(true));
+            List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
+            long count = mongoTemplate.count(query1, SoulSoup.class);
+            Random random = new Random();
 
-        int rand = random.nextInt((int)count);
-        String sentence = soups.get(rand).getSentence();
+            int rand = random.nextInt((int)count);
+            String sentence = soups.get(rand).getSentence();
 
-        response.setSentence(sentence);
-        response.setSentiment(sentiment);
+            Update update = Update.update("sentence", sentence);
+            Query query2 = Query.query(Criteria.where("openid").is(openid).and("createTime").is(now));
+            mongoTemplate.updateMulti(query2, update, Feel.class);
+            response.setSentence(sentence);
+        } else {
+            // 已保存的话，则从feel中获取
+            response.setSentence(feel.getSentence());
+        }
+        response.setIsSetup(1);
 
         return Result.success(response);
     }

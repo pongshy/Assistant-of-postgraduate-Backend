@@ -24,4 +24,6 @@ public class FeelResponse {
     private Integer sentiment;
 
     private String sentence;
+
+    private Integer isSetup = 0;
 }

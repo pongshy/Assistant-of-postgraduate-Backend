@@ -27,6 +27,25 @@ public class Feel {
 
     private String createTime;
 
+    private String sentence;
+
+    private Integer sentiment;
+
+    public Integer getSentiment() {
+        return sentiment;
+    }
+
+    public void setSentiment(Integer sentiment) {
+        this.sentiment = sentiment;
+    }
+
+    public String getSentence() {
+        return sentence;
+    }
+
+    public void setSentence(String sentence) {
+        this.sentence = sentence;
+    }
 
     public String getId() {
         return id;

@@ -17,5 +17,6 @@ public class PlantResponse {
 
     private Double percent;
 
+    private Integer isSetup = 0;
 
 }

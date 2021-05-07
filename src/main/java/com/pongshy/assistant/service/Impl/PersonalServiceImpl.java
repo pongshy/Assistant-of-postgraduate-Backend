@@ -3,18 +3,22 @@ package com.pongshy.assistant.service.Impl;
 import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.exception.EmAllException;
 import com.pongshy.assistant.model.Result;
-import com.pongshy.assistant.model.mongodb.CountDown;
-import com.pongshy.assistant.model.mongodb.Sign;
-import com.pongshy.assistant.model.mongodb.TaskItem;
-import com.pongshy.assistant.model.mongodb.UserInfo;
+import com.pongshy.assistant.model.mongodb.*;
 import com.pongshy.assistant.model.request.DayRequest;
+import com.pongshy.assistant.model.request.DiaryHistoryRequest;
+import com.pongshy.assistant.model.request.PlantHistoryRequest;
 import com.pongshy.assistant.model.response.CountdownDayResponse;
+import com.pongshy.assistant.model.response.FeelResponse;
 import com.pongshy.assistant.model.response.PersonalResponse;
+import com.pongshy.assistant.model.response.PlantResponse;
 import com.pongshy.assistant.service.PersonalService;
 import com.pongshy.assistant.tool.NumTool;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -176,5 +180,95 @@ public class PersonalServiceImpl implements PersonalService {
         mongoTemplate.updateMulti(query, update, CountDown.class);
 
         return Result.success((Object) 1);
+    }
+
+    /*
+     * @Description: 根据日期返回用户所选择的植物和任务完成百分比
+     * @Method: [plantHistoryRequest]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/7 22:13
+     */
+    @Override
+    public Result getHistoryPlant(PlantHistoryRequest plantHistoryRequest)  {
+        PlantResponse response = new PlantResponse();
+        Query query = Query.query(
+                Criteria.where("openid").is(plantHistoryRequest.getOpenid())
+                        .and("createTime").is(plantHistoryRequest.getTime())
+        )
+                .with(
+                        Sort.by(
+                                Sort.Order.desc("createTime")
+                        )
+                );
+        Plant plant = mongoTemplate.findOne(query, Plant.class);
+        // 若不存在
+        if (ObjectUtils.isEmpty(plant)) {
+            return Result.success(response);
+        }
+        response.setPlant(plant.getPlantId());
+
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = null;
+        try {
+            date = sf.parse(plantHistoryRequest.getTime());
+
+            Query query1 = Query.query(
+                    Criteria.where("wechatId").is(plantHistoryRequest.getOpenid())
+                            .and("startTime").lte(date)
+                            .and("endTime").gte(date)
+                            .and("parentId").ne("0")
+            )
+                    .with(Sort.by(Sort.Order.desc("createTime")));
+
+            List<TaskItem> taskItemList = mongoTemplate.find(query1, TaskItem.class);
+            // 如果为空
+            if (ObjectUtils.isEmpty(taskItemList)) {
+                response.setPercent(0.0);
+            } else {
+                Double finish = 0.0;
+                for (TaskItem taskItem : taskItemList) {
+                    if (taskItem.getIsFinish() == 1) {
+                        finish++;
+                    }
+                }
+                Double percent = finish / (double) taskItemList.size();
+                response.setPercent(NumTool.saveTwoDecimal(percent));
+            }
+            response.setIsSetup(1);
+
+            return Result.success(response);
+        } catch (ParseException e) {
+            return Result.error(new AllException(EmAllException.BAD_REQUEST, "时间输入有误"));
+        }
+
+    }
+
+    /*
+     * @Description: 根据日期返回用户的心情日记
+     * @Method: [diaryHistoryRequest]
+     * @Return: com.pongshy.assistant.model.Result
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/7 23:05
+     */
+    @Override
+    public Result getHistoryDiary(DiaryHistoryRequest diaryHistoryRequest) {
+        FeelResponse response = new FeelResponse();
+
+        Query query = Query.query(
+                Criteria.where("openid").is(diaryHistoryRequest.getOpenid())
+                    .and("createTime").is(diaryHistoryRequest.getTime())
+        );
+        Feel feel = mongoTemplate.findOne(query, Feel.class);
+        // 如果不存在
+        if (ObjectUtils.isEmpty(feel)) {
+            return Result.success(response);
+        }
+        BeanUtils.copyProperties(feel, response);
+        response.setIsSetup(1);
+
+        return Result.success(response);
     }
 }

@@ -169,6 +169,7 @@ public class HomePageServiceImpl implements HomePageService {
      **/
     @Override
     public Result getPlantAndPercent(String openid) {
+        PlantResponse response = new PlantResponse();
         Query query = Query.query(Criteria.where("openid").is(openid))
                 .with(
                         Sort.by(
@@ -177,9 +178,8 @@ public class HomePageServiceImpl implements HomePageService {
                 );
         Plant plant = mongoTemplate.findOne(query, Plant.class);
         if (ObjectUtils.isEmpty(plant) || !plant.getCreateTime().equals(TimeTool.getNowStrTimeOnlyYMD())) {
-            return Result.success(null);
+            return Result.success(response);
         }
-        PlantResponse response = new PlantResponse();
 
 //        response.setPlant(PlantEnum.getPlant(plant.getPlantId()));
         response.setPlant(plant.getPlantId());
@@ -208,6 +208,7 @@ public class HomePageServiceImpl implements HomePageService {
             String per = new DecimalFormat("#.00").format(percent);
             response.setPercent(Double.parseDouble(per));
         }
+        response.setIsSetup(1);
 
         return Result.success(response);
     }
