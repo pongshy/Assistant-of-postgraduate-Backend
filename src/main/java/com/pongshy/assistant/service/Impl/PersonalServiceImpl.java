@@ -153,7 +153,7 @@ public class PersonalServiceImpl implements PersonalService {
         CountDown countDown = mongoTemplate.findOne(query, CountDown.class);
         if (!ObjectUtils.isEmpty(countDown)) {
             response.setTitle(countDown.getTitle());
-            response.setEndDay(countDown.getEndDay());
+            response.setEndDay(countDown.getEndDay().substring(0, countDown.getEndDay().indexOf(" ")));
             response.setIsSetup(1);
         }
 
