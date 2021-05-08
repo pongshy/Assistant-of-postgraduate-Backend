@@ -15,6 +15,7 @@ import javax.validation.constraints.NotEmpty;
 public class FeelModifyRequest {
 
 
+    @NotEmpty(message = "日记不能为空")
     private String words;
 
     private String imageUrl;

@@ -8,6 +8,7 @@ import com.pongshy.assistant.model.mongodb.UserInfo;
 import com.pongshy.assistant.model.myEnum.Color;
 import com.pongshy.assistant.model.myEnum.PlantEnum;
 import com.pongshy.assistant.tool.*;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
+@Slf4j
 class AssistantApplicationTests {
 
 
@@ -79,11 +81,10 @@ class AssistantApplicationTests {
 //        } catch (ParseException e) {
 //            e.printStackTrace();
 //        }
-        UserInfo userInfo = new UserInfo();
-        userInfo.setOpenId("123456");
-        userInfo.setWname("test");
-        mongoTemplate.save(userInfo, "UserInfo");
-
+//        UserInfo userInfo = new UserInfo();
+//        userInfo.setOpenId("123456");
+//        userInfo.setWname("test");
+//        mongoTemplate.save(userInfo, "UserInfo");
     }
 
 }

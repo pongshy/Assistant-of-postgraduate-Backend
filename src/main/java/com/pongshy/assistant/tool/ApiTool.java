@@ -145,7 +145,21 @@ public class ApiTool {
         log.info(json.toString());
 
         JSONArray items = json.getJSONArray("items");
-        String sentiment = items.getJSONObject(0).getString("sentiment");
+        JSONObject detail = items.getJSONObject(0);
+        String sentiment = detail.getString("sentiment");
+        Double confidence = Double.parseDouble(detail.getString("confidence"));
+
+        if (confidence < 0.5) {
+            Double positive = Double.parseDouble(detail.getString("positive_prob"));
+            Double negative = Double.parseDouble(detail.getString("negative_prob"));
+
+            if (positive > negative) {
+                sentiment = "2";
+            } else {
+                sentiment = "0";
+            }
+        }
+
         // 返回心情: 0:负向，1:中性，2:正向
         return sentiment;
     }

@@ -116,7 +116,7 @@ public class FeelServiceImpl implements FeelService {
             Query query1 = Query.query(Criteria.where("id").exists(true));
             List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
             long count = mongoTemplate.count(query1, SoulSoup.class);
-            Random random = new Random();
+            Random random = new Random(System.currentTimeMillis());
 
             int rand = random.nextInt((int)count);
             String sentence = soups.get(rand).getSentence();
@@ -148,6 +148,29 @@ public class FeelServiceImpl implements FeelService {
         Update update = Update.update("words", request.getWords())
                 .set("imageUrl", request.getImageUrl());
         mongoTemplate.updateMulti(query, update, Feel.class);
+
+        try {
+            // 重新进行情感分析
+            Integer sentiment = Integer.parseInt(
+                    ApiTool.getFeeling(ApiTool.access_token, request.getWords())
+            );
+            // 修改句子
+            Query query1 = Query.query(Criteria.where("id").exists(true));
+            List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
+            long count = mongoTemplate.count(query1, SoulSoup.class);
+            Random random = new Random(System.currentTimeMillis());
+
+            int rand = random.nextInt((int)count);
+            String sentence = soups.get(rand).getSentence();
+
+            Update update1 = Update.update("sentiment", sentiment)
+                    .set("sentence", sentence);
+            mongoTemplate.updateMulti(query, update1, Feel.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.error(new AllException(EmAllException.INTERNAL_ERROR, "百度Api出错"));
+        }
 
         return Result.success("修改成功");
     }
