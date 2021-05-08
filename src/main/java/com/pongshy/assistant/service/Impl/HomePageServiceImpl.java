@@ -190,7 +190,7 @@ public class HomePageServiceImpl implements HomePageService {
                 Criteria.where("wechatId").is(openid)
                         .and("startTime").lte(now)
                         .and("endTime").gte(now)
-                        .and("parentId").ne("0")
+//                        .and("parentId").ne("0")
         )
                 .with(Sort.by(Sort.Order.desc("createTime")));
 

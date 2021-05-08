@@ -13,6 +13,7 @@ import com.pongshy.assistant.model.response.PersonalResponse;
 import com.pongshy.assistant.model.response.PlantResponse;
 import com.pongshy.assistant.service.PersonalService;
 import com.pongshy.assistant.tool.NumTool;
+import com.pongshy.assistant.tool.TimeTool;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
@@ -95,8 +96,28 @@ public class PersonalServiceImpl implements PersonalService {
                 }
             }
             response.setFinishedTaskNum(count);
-            Double percent = (double) count / (double) taskItemList.size();
-            response.setPercent(NumTool.saveTwoDecimal(percent));
+            // 今日任务完成百分比
+            Date now = TimeTool.todayCreate().getTime();
+            Query query1 = Query.query(
+                    Criteria.where("wechatId").is(openid)
+                            .and("startTime").lte(now)
+                            .and("endTime").gte(now)
+            )
+                    .with(Sort.by(Sort.Order.desc("createTime")));
+            List<TaskItem> tmp_task = mongoTemplate.find(query1, TaskItem.class);
+
+            if (ObjectUtils.isEmpty(tmp_task)) {
+                response.setPercent(0.00);
+            } else {
+                Integer isFinish = 0;
+                for (TaskItem tmp : tmp_task) {
+                    if (tmp.getIsFinish() == 1) {
+                        isFinish++;
+                    }
+                }
+                Double percent = (double) isFinish / (double) tmp_task.size();
+                response.setPercent(NumTool.saveTwoDecimal(percent));
+            }
         }
 
         Query query1 = Query.query(Criteria.where("openid").is(openid));
@@ -218,7 +239,7 @@ public class PersonalServiceImpl implements PersonalService {
                     Criteria.where("wechatId").is(plantHistoryRequest.getOpenid())
                             .and("startTime").lte(date)
                             .and("endTime").gte(date)
-                            .and("parentId").ne("0")
+//                            .and("parentId").ne("0")
             )
                     .with(Sort.by(Sort.Order.desc("createTime")));
 
