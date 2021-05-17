@@ -7,10 +7,12 @@ import com.pongshy.assistant.model.mongodb.Feel;
 import com.pongshy.assistant.model.mongodb.SoulSoup;
 import com.pongshy.assistant.model.request.FeelModifyRequest;
 import com.pongshy.assistant.model.request.FeelRequest;
+import com.pongshy.assistant.model.response.AllFeelResponse;
 import com.pongshy.assistant.model.response.FeelResponse;
 import com.pongshy.assistant.service.FeelService;
 import com.pongshy.assistant.tool.ApiTool;
 import com.pongshy.assistant.tool.TimeTool;
+import javafx.collections.transformation.FilteredList;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -22,10 +24,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @ClassName: FeelServiceImpl
@@ -58,6 +57,26 @@ public class FeelServiceImpl implements FeelService {
         record.setImageUrl(feelRequest.getImageUrl());
         record.setOpenid(feelRequest.getOpenid());
         record.setCreateTime(TimeTool.getNowStrTimeOnlyYMD());
+        // 心情分析
+        Integer sentiment = 1;
+        try {
+            // 情感分析
+            sentiment = Integer.parseInt(
+                    ApiTool.getFeeling(ApiTool.access_token, record.getWords())
+            );
+        } catch (IOException e) {
+            return Result.error(new AllException(EmAllException.INTERNAL_ERROR, "百度Api出错"));
+        }
+        record.setSentiment(sentiment);
+        // 获取句子
+        Query query1 = Query.query(Criteria.where("id").exists(true));
+        List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
+        long count = mongoTemplate.count(query1, SoulSoup.class);
+        Random random = new Random(System.currentTimeMillis());
+
+        int rand = random.nextInt((int) count);
+        String sentence = soups.get(rand).getSentence();
+        record.setSentence(sentence);
 
         mongoTemplate.save(record, "Feel");
         return Result.success("添加成功");
@@ -73,65 +92,31 @@ public class FeelServiceImpl implements FeelService {
      **/
     @Override
     public Result getImageAndWord(String openid) {
-        FeelResponse response = new FeelResponse();
+        AllFeelResponse allFeelResponse = new AllFeelResponse();
+        List<FeelResponse> responseList = new ArrayList<>();
         String now = TimeTool.getNowStrTimeOnlyYMD();
         Query query = Query.query(
                 Criteria.where("openid").is(openid)
                         .and("createTime").is(now)
         )
                 .with(Sort.by(
-                        Sort.Order.desc("createTime")
+                        Sort.Order.desc("_id")
                 ));
 
-        Feel feel = mongoTemplate.findOne(query, Feel.class);
+        List<Feel> feelList = mongoTemplate.find(query, Feel.class);
         // 如果不存在
-        if (ObjectUtils.isEmpty(feel)) {
-            return Result.success(response);
+        if (ObjectUtils.isEmpty(feelList)) {
+            return Result.success(allFeelResponse);
         }
-        // 存在的情况下
-        BeanUtils.copyProperties(feel, response);
-        // 心情
-        if (feel.getSentiment() == null) {
-            Integer sentiment = 0;
-            try {
-                // 情感分析
-                sentiment = Integer.parseInt(
-                        ApiTool.getFeeling(ApiTool.access_token, response.getWords())
-                );
-                // 保存
-                Query query1 = Query.query(Criteria.where("openid").is(openid).and("createTime").is(now));
-                Update update = Update.update("sentiment", sentiment);
-                mongoTemplate.updateMulti(query1, update, Feel.class);
-                response.setSentiment(sentiment);
-
-            } catch (IOException e) {
-                return Result.error(new AllException(EmAllException.INTERNAL_ERROR, "百度Api出错"));
-            }
-        } else {
-            response.setSentiment(feel.getSentiment());
+        for (Feel feel : feelList) {
+            FeelResponse feel_tmp = new FeelResponse();
+            BeanUtils.copyProperties(feel, feel_tmp);
+            responseList.add(feel_tmp);
         }
-        // 保存句子
-        // 如果句子没有被保存，则保存
-        if (feel.getSentence() == null) {
-            Query query1 = Query.query(Criteria.where("id").exists(true));
-            List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
-            long count = mongoTemplate.count(query1, SoulSoup.class);
-            Random random = new Random(System.currentTimeMillis());
+        allFeelResponse.setFeelList(responseList);
+        allFeelResponse.setIsSetup(1);
 
-            int rand = random.nextInt((int)count);
-            String sentence = soups.get(rand).getSentence();
-
-            Update update = Update.update("sentence", sentence);
-            Query query2 = Query.query(Criteria.where("openid").is(openid).and("createTime").is(now));
-            mongoTemplate.updateMulti(query2, update, Feel.class);
-            response.setSentence(sentence);
-        } else {
-            // 已保存的话，则从feel中获取
-            response.setSentence(feel.getSentence());
-        }
-        response.setIsSetup(1);
-
-        return Result.success(response);
+        return Result.success(allFeelResponse);
     }
 
     /*
@@ -160,7 +145,7 @@ public class FeelServiceImpl implements FeelService {
             long count = mongoTemplate.count(query1, SoulSoup.class);
             Random random = new Random(System.currentTimeMillis());
 
-            int rand = random.nextInt((int)count);
+            int rand = random.nextInt((int) count);
             String sentence = soups.get(rand).getSentence();
 
             Update update1 = Update.update("sentiment", sentiment)

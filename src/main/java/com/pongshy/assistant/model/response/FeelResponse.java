@@ -25,5 +25,5 @@ public class FeelResponse {
 
     private String sentence;
 
-    private Integer isSetup = 0;
+//    private Integer isSetup = 0;
 }

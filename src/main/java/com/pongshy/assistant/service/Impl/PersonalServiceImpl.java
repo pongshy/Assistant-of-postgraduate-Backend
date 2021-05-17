@@ -7,10 +7,7 @@ import com.pongshy.assistant.model.mongodb.*;
 import com.pongshy.assistant.model.request.DayRequest;
 import com.pongshy.assistant.model.request.DiaryHistoryRequest;
 import com.pongshy.assistant.model.request.PlantHistoryRequest;
-import com.pongshy.assistant.model.response.CountdownDayResponse;
-import com.pongshy.assistant.model.response.FeelResponse;
-import com.pongshy.assistant.model.response.PersonalResponse;
-import com.pongshy.assistant.model.response.PlantResponse;
+import com.pongshy.assistant.model.response.*;
 import com.pongshy.assistant.service.PersonalService;
 import com.pongshy.assistant.tool.NumTool;
 import com.pongshy.assistant.tool.TimeTool;
@@ -32,6 +29,7 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -276,20 +274,30 @@ public class PersonalServiceImpl implements PersonalService {
      */
     @Override
     public Result getHistoryDiary(DiaryHistoryRequest diaryHistoryRequest) {
-        FeelResponse response = new FeelResponse();
+        AllFeelResponse allFeelResponse = new AllFeelResponse();
+        List<FeelResponse> responseList = new ArrayList<>();
 
         Query query = Query.query(
                 Criteria.where("openid").is(diaryHistoryRequest.getOpenid())
                     .and("createTime").is(diaryHistoryRequest.getTime())
-        );
-        Feel feel = mongoTemplate.findOne(query, Feel.class);
+        )
+                .with(
+                        Sort.by(
+                                Sort.Order.desc("_id")
+                        )
+                );
+        List<Feel> feelList = mongoTemplate.find(query, Feel.class);
         // 如果不存在
-        if (ObjectUtils.isEmpty(feel)) {
-            return Result.success(response);
+        if (ObjectUtils.isEmpty(feelList)) {
+            return Result.success(allFeelResponse);
         }
-        BeanUtils.copyProperties(feel, response);
-        response.setIsSetup(1);
-
-        return Result.success(response);
+        for (Feel feel : feelList) {
+            FeelResponse response = new FeelResponse();
+            BeanUtils.copyProperties(feel, response);
+            responseList.add(response);
+        }
+        allFeelResponse.setIsSetup(1);
+        allFeelResponse.setFeelList(responseList);
+        return Result.success(allFeelResponse);
     }
 }

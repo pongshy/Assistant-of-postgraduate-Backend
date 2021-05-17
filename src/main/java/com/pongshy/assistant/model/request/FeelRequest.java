@@ -2,6 +2,7 @@ package com.pongshy.assistant.model.request;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 public class FeelRequest {
 
 
+    @NotBlank(message = "日记不能为空")
     private String words;
 
     private String imageUrl;
