@@ -6,6 +6,7 @@ import com.pongshy.assistant.model.request.FeelRequest;
 import com.pongshy.assistant.service.FeelService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,7 +30,7 @@ public class FeelController {
 
     @ApiOperation(value = "保存用户当天的图片和心情句子")
     @PostMapping("/commit")
-    public Result commitFeelAndWords(@RequestBody FeelRequest feelRequest) {
+    public Result commitFeelAndWords(@RequestBody @Validated FeelRequest feelRequest) {
         return feelService.commitFeelAndWords(feelRequest);
     }
 
@@ -41,7 +42,7 @@ public class FeelController {
 
     @ApiOperation(value = "修改用户图片和句子")
     @PostMapping("/modify")
-    public Result modifyFeeling(@RequestBody FeelModifyRequest feelRequest) {
+    public Result modifyFeeling(@RequestBody @Validated FeelModifyRequest feelRequest) {
         return feelService.modifyFeel(feelRequest);
     }
 

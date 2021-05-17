@@ -22,6 +22,6 @@ public class FeelRequest {
 
     private String imageUrl;
 
-    @NotEmpty
+    @NotBlank(message = "openid不能为空")
     private String openid;
 }

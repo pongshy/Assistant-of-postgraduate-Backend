@@ -2,6 +2,7 @@ package com.pongshy.assistant.model.request;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 /**
@@ -20,6 +21,6 @@ public class FeelModifyRequest {
 
     private String imageUrl;
 
-    @NotEmpty
+    @NotBlank(message = "id不能为空")
     private String id;
 }
