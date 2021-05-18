@@ -16,6 +16,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,6 +86,7 @@ class AssistantApplicationTests {
 //        userInfo.setOpenId("123456");
 //        userInfo.setWname("test");
 //        mongoTemplate.save(userInfo, "UserInfo");
+        System.out.println(TimeTool.getFirstExamTime());
     }
 
 }

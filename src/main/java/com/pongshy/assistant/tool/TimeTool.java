@@ -189,4 +189,40 @@ public class TimeTool {
     public static String getNowStrTimeOnlyYMD() {
         return DateToString(todayCreate().getTime());
     }
+
+    /*
+     * @Description: 获取初试时间
+     * @Method: []
+     * @Return: java.lang.String
+     * @Version: 1.0
+     * @Author: pongshy
+     * @Date: 2021/5/18 23:10
+     */
+    public static String getFirstExamTime() {
+        Date now = new Date();
+
+        String today = DateToString(todayCreate().getTime());
+        StringBuffer sb = new StringBuffer();
+        sb.append(today.substring(0, 4));
+        sb.append("-12-21 00:00:00");
+        Date goal = stringToDate(sb.toString());
+
+        if (goal.after(now)) {
+            return DateToString(goal);
+        } else {
+            // 设置明年的考研日期为deadline
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.YEAR, 1);
+
+            String year = String.valueOf(calendar.get(Calendar.YEAR));
+            StringBuffer s = new StringBuffer();
+            s.append(year);
+            s.append("-12-21 00:00:00");
+            return sb.toString();
+        }
+
+
+
+
+    }
 }

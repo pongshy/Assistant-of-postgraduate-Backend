@@ -4,10 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.exception.EmAllException;
 import com.pongshy.assistant.model.Result;
+import com.pongshy.assistant.model.mongodb.CountDown;
+import com.pongshy.assistant.model.mongodb.TaskItem;
 import com.pongshy.assistant.model.mongodb.UserInfo;
 import com.pongshy.assistant.model.request.WechatInforRequest;
 import com.pongshy.assistant.model.response.LoginResponse;
 import com.pongshy.assistant.service.LoginService;
+import com.pongshy.assistant.tool.TimeTool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
@@ -25,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -82,6 +86,32 @@ public class LoginServiceImpl implements LoginService {
 
                     record.setOpenId(openid);
                     mongoTemplate.save(record, "UserInfo");
+
+                    // 设置模板
+                    TaskItem taskItem = new TaskItem();
+                    taskItem.setCreateTime(new Date(System.currentTimeMillis()));
+                    taskItem.setParentId("0");
+
+                    taskItem.setTaskName("数学");
+                    taskItem.setWechatId(record.getOpenId());
+                    mongoTemplate.save(taskItem, "TaskItem");
+
+                    taskItem.setTaskName("英语");
+                    mongoTemplate.save(taskItem, "TaskItem");
+
+                    taskItem.setTaskName("政治");
+                    mongoTemplate.save(taskItem, "TaskItem");
+
+                    taskItem.setTaskName("专业课");
+                    mongoTemplate.save(taskItem, "TaskItem");
+
+                    // 给新用户设置初始倒计时
+                    CountDown countDown = new CountDown();
+                    countDown.setOpenid(openid);
+                    countDown.setTitle("考研初试");
+                    countDown.setEndDay(TimeTool.getFirstExamTime());
+                    mongoTemplate.save(countDown, "CountDown");
+
 //                    if (userDOMapper.insertSelective(record) == 0) {
 //                        throw new AllException(EmAllException.DATABASE_ERROR, "数据库操作异常");
 //                    }
