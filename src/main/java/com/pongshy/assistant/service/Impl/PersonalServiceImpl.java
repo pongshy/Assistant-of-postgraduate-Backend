@@ -294,6 +294,7 @@ public class PersonalServiceImpl implements PersonalService {
         for (Feel feel : feelList) {
             FeelResponse response = new FeelResponse();
             BeanUtils.copyProperties(feel, response);
+            response.setCreateTime(TimeTool.DateToString(feel.getInsertTime()));
             responseList.add(response);
         }
         allFeelResponse.setIsSetup(1);

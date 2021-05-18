@@ -52,11 +52,13 @@ public class FeelServiceImpl implements FeelService {
     @Override
     public Result commitFeelAndWords(FeelRequest feelRequest) {
         Feel record = new Feel();
+        Date now = new Date(System.currentTimeMillis());
 
         record.setWords(feelRequest.getWords());
         record.setImageUrl(feelRequest.getImageUrl());
         record.setOpenid(feelRequest.getOpenid());
         record.setCreateTime(TimeTool.getNowStrTimeOnlyYMD());
+        record.setInsertTime(now);
         // 心情分析
         Integer sentiment = 1;
         try {
@@ -111,6 +113,7 @@ public class FeelServiceImpl implements FeelService {
         for (Feel feel : feelList) {
             FeelResponse feel_tmp = new FeelResponse();
             BeanUtils.copyProperties(feel, feel_tmp);
+            feel_tmp.setCreateTime(TimeTool.DateToString(feel.getInsertTime()));
             responseList.add(feel_tmp);
         }
         allFeelResponse.setFeelList(responseList);

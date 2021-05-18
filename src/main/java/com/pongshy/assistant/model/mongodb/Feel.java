@@ -27,9 +27,19 @@ public class Feel {
 
     private String createTime;
 
+    private Date insertTime;
+
     private String sentence;
 
     private Integer sentiment;
+
+    public Date getInsertTime() {
+        return insertTime;
+    }
+
+    public void setInsertTime(Date insertTime) {
+        this.insertTime = insertTime;
+    }
 
     public Integer getSentiment() {
         return sentiment;
