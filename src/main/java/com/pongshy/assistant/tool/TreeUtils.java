@@ -7,6 +7,7 @@ import com.pongshy.assistant.model.mongodb.TaskItem;
 import com.pongshy.assistant.model.response.TaskResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,11 +48,26 @@ public class TreeUtils {
         for (TaskItem taskItem : taskItemList) {
             if (taskItem.getParentId().equals("0")) {
                 Task task = new Task();
-                BeanUtils.copyProperties(taskItem, task);
-                task.setEndTime(taskItem.getEndTime());
-                task.setStartTime(taskItem.getStartTime());
+//                BeanUtils.copyProperties(taskItem, task);
+                task.setId(taskItem.getId());
+                task.setTaskName(taskItem.getTaskName());
+                if (!ObjectUtils.isEmpty(taskItem.getDescription())) {
+                    task.setDescription(taskItem.getDescription());
+                }
+                if (!ObjectUtils.isEmpty(taskItem.getPriority())) {
+                    task.setPriority(taskItem.getPriority());
+                }
+                task.setIsFinish(taskItem.getIsFinish());
+                if (!ObjectUtils.isEmpty(taskItem.getEndTime())) {
+                    task.setEndTime(taskItem.getEndTime());
+                }
+                if (!ObjectUtils.isEmpty(taskItem.getStartTime())) {
+                    task.setStartTime(taskItem.getStartTime());
+                }
                 task.setParentId(taskItem.getParentId());
-                task.setTag(taskItem.getTag());
+                if (!ObjectUtils.isEmpty(taskItem.getTag())) {
+                    task.setTag(taskItem.getTag());
+                }
 
                 for (TaskItem tmp : taskItemList) {
                     if (tmp.getParentId().equals(taskItem.getId())) {

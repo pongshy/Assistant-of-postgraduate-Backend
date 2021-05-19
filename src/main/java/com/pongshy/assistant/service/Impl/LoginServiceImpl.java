@@ -94,16 +94,32 @@ public class LoginServiceImpl implements LoginService {
 
                     taskItem.setTaskName("数学");
                     taskItem.setWechatId(record.getOpenId());
+                    taskItem.setIsFinish(0);
                     mongoTemplate.save(taskItem, "TaskItem");
 
-                    taskItem.setTaskName("英语");
-                    mongoTemplate.save(taskItem, "TaskItem");
+                    TaskItem taskItem1 = new TaskItem();
+                    taskItem1.setTaskName("英语");
+                    taskItem1.setParentId("0");
+                    taskItem1.setWechatId(openid);
+                    taskItem1.setCreateTime(new Date(System.currentTimeMillis()));
+                    taskItem1.setIsFinish(0);
+                    mongoTemplate.save(taskItem1, "TaskItem");
 
-                    taskItem.setTaskName("政治");
-                    mongoTemplate.save(taskItem, "TaskItem");
+                    TaskItem taskItem2 = new TaskItem();
+                    taskItem2.setParentId("0");
+                    taskItem2.setTaskName("政治");
+                    taskItem2.setWechatId(openid);
+                    taskItem2.setCreateTime(new Date(System.currentTimeMillis()));
+                    taskItem2.setIsFinish(0);
+                    mongoTemplate.save(taskItem2, "TaskItem");
 
-                    taskItem.setTaskName("专业课");
-                    mongoTemplate.save(taskItem, "TaskItem");
+                    TaskItem taskItem3 = new TaskItem();
+                    taskItem3.setParentId("0");
+                    taskItem3.setTaskName("专业课");
+                    taskItem3.setWechatId(openid);
+                    taskItem3.setCreateTime(new Date(System.currentTimeMillis()));
+                    taskItem3.setIsFinish(0);
+                    mongoTemplate.save(taskItem3, "TaskItem");
 
                     // 给新用户设置初始倒计时
                     CountDown countDown = new CountDown();

@@ -127,8 +127,12 @@ public class TaskServiceImpl implements TaskService {
             TaskResponse tmp = new TaskResponse();
 
             tmp.setId(task.getId());
-            tmp.setStartTime(TimeTool.dateWithoutHMS(task.getStartTime()));
-            tmp.setEndTime(TimeTool.dateWithoutHMS(task.getEndTime()));
+            if (!ObjectUtils.isEmpty(task.getStartTime())) {
+                tmp.setStartTime(TimeTool.dateWithoutHMS(task.getStartTime()));
+            }
+            if (!ObjectUtils.isEmpty(task.getEndTime())) {
+                tmp.setEndTime(TimeTool.dateWithoutHMS(task.getEndTime()));
+            }
             tmp.setDescription(task.getDescription());
             tmp.setIsFinish(task.getIsFinish());
             if (task.getChildren() == null) {
@@ -137,11 +141,17 @@ public class TaskServiceImpl implements TaskService {
                 tmp.setAllTasks(task.getChildren().size());
             }
             tmp.setParentId(task.getParentId());
-            tmp.setPeriod_time((int)(task.getEndTime().getTime() - task.getStartTime().getTime()) / (1000 * 3600 * 24));
-            tmp.setPeriod_deadline(TimeTool.getDeadline(task.getEndTime()));
+            if (!ObjectUtils.isEmpty(task.getStartTime()) && !ObjectUtils.isEmpty(task.getEndTime())) {
+                tmp.setPeriod_time((int) (task.getEndTime().getTime() - task.getStartTime().getTime()) / (1000 * 3600 * 24));
+                tmp.setPeriod_deadline(TimeTool.getDeadline(task.getEndTime()));
+            }
             tmp.setFinishedTask(TaskTool.getFinishedTaskCount(task));
-            tmp.setPriority(new Priority(task.getPriority()));
-            tmp.setTag(new TagResponse(task.getTag()));
+            if (!ObjectUtils.isEmpty(task.getPriority())) {
+                tmp.setPriority(new Priority(task.getPriority()));
+            }
+            if (!ObjectUtils.isEmpty(task.getTag())) {
+                tmp.setTag(new TagResponse(task.getTag()));
+            }
             tmp.setTaskName(task.getTaskName());
 
             responses.add(tmp);
