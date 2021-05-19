@@ -276,29 +276,32 @@ public class PersonalServiceImpl implements PersonalService {
     public Result getHistoryDiary(DiaryHistoryRequest diaryHistoryRequest) {
         AllFeelResponse allFeelResponse = new AllFeelResponse();
         List<FeelResponse> responseList = new ArrayList<>();
-
-        Query query = Query.query(
-                Criteria.where("openid").is(diaryHistoryRequest.getOpenid())
-                    .and("createTime").is(diaryHistoryRequest.getTime())
-        )
-                .with(
-                        Sort.by(
-                                Sort.Order.desc("_id")
-                        )
-                );
-        List<Feel> feelList = mongoTemplate.find(query, Feel.class);
-        // 如果不存在
-        if (ObjectUtils.isEmpty(feelList)) {
+        try {
+            Query query = Query.query(
+                    Criteria.where("openid").is(diaryHistoryRequest.getOpenid())
+                            .and("createTime").is(diaryHistoryRequest.getTime())
+            )
+                    .with(
+                            Sort.by(
+                                    Sort.Order.desc("_id")
+                            )
+                    );
+            List<Feel> feelList = mongoTemplate.find(query, Feel.class, "Feel");
+            // 如果不存在
+            if (ObjectUtils.isEmpty(feelList)) {
+                return Result.success(allFeelResponse);
+            }
+            for (Feel feel : feelList) {
+                FeelResponse response = new FeelResponse();
+                BeanUtils.copyProperties(feel, response);
+                response.setCreateTime(TimeTool.DateToString(feel.getInsertTime()));
+                responseList.add(response);
+            }
+            allFeelResponse.setIsSetup(1);
+            allFeelResponse.setFeelList(responseList);
+            return Result.success(allFeelResponse);
+        } catch (Exception e) {
             return Result.success(allFeelResponse);
         }
-        for (Feel feel : feelList) {
-            FeelResponse response = new FeelResponse();
-            BeanUtils.copyProperties(feel, response);
-            response.setCreateTime(TimeTool.DateToString(feel.getInsertTime()));
-            responseList.add(response);
-        }
-        allFeelResponse.setIsSetup(1);
-        allFeelResponse.setFeelList(responseList);
-        return Result.success(allFeelResponse);
     }
 }

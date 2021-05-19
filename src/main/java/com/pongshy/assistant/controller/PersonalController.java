@@ -7,6 +7,7 @@ import com.pongshy.assistant.model.request.PlantHistoryRequest;
 import com.pongshy.assistant.model.response.PersonalResponse;
 import com.pongshy.assistant.service.PersonalService;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
 @CrossOrigin
 @RequestMapping("/personal")
 @Api(tags = "个人主页模块")
+@Slf4j
 public class PersonalController {
 
 
@@ -58,6 +60,7 @@ public class PersonalController {
     @ApiOperation(value = "根据日期返回心情日记")
     @PostMapping("/diaryhis")
     public Result getHistoryDiary(@RequestBody @Validated DiaryHistoryRequest diaryHistoryRequest) {
+        log.info("Time: " + diaryHistoryRequest.getTime());
         return personalService.getHistoryDiary(diaryHistoryRequest);
     }
 
