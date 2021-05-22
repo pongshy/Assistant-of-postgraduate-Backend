@@ -52,7 +52,7 @@ public class HomePageServiceImpl implements HomePageService {
         // 检测今天是否已经签过到
         Integer success = 0;
         String now = TimeTool.DateToString(TimeTool.todayCreate().getTime());
-        Query query = Query.query(Criteria.where("signTime").is(now));
+        Query query = Query.query(Criteria.where("signTime").is(now).and("openid").is(openid));
         try {
             List<Sign> signList = mongoTemplate.find(query, Sign.class);
             if (signList.size() != 0) {
@@ -86,7 +86,7 @@ public class HomePageServiceImpl implements HomePageService {
 //
 //        Long count = mongoTemplate.count(query, Sign.class);
         String now = TimeTool.DateToString(TimeTool.todayCreate().getTime());
-        Query query = Query.query(Criteria.where("signTime").is(now));
+        Query query = Query.query(Criteria.where("signTime").is(now).and("openid").is(openid));
         List<Sign> signList = mongoTemplate.find(query, Sign.class);
         Integer success = 0;
         if (signList.size() != 0) {
