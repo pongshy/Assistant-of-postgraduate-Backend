@@ -40,4 +40,12 @@ public class TagResponse {
         this.important = Color.getImportant(this.imp);
         this.emergency = Color.getEmergency(this.imp);
     }
+
+    public TagResponse() {
+        this.color = "";
+        this.tag_name = "";
+        this.imp = null;
+        this.important = "";
+        this.emergency = "";
+    }
 }

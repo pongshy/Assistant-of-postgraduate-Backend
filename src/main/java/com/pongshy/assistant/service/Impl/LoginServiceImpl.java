@@ -88,38 +88,38 @@ public class LoginServiceImpl implements LoginService {
                     mongoTemplate.save(record, "UserInfo");
 
                     // 设置模板
-                    TaskItem taskItem = new TaskItem();
-                    taskItem.setCreateTime(new Date(System.currentTimeMillis()));
-                    taskItem.setParentId("0");
+                    TaskItem taskItem3 = new TaskItem();
+                    taskItem3.setParentId("0");
+                    taskItem3.setTaskName("模拟阶段");
+                    taskItem3.setWechatId(openid);
+                    taskItem3.setCreateTime(new Date(System.currentTimeMillis()));
+                    taskItem3.setIsFinish(0);
+                    mongoTemplate.save(taskItem3, "TaskItem");
 
-                    taskItem.setTaskName("数学");
-                    taskItem.setWechatId(record.getOpenId());
-                    taskItem.setIsFinish(0);
-                    mongoTemplate.save(taskItem, "TaskItem");
+                    TaskItem taskItem2 = new TaskItem();
+                    taskItem2.setParentId("0");
+                    taskItem2.setTaskName("冲刺阶段");
+                    taskItem2.setWechatId(openid);
+                    taskItem2.setCreateTime(new Date(System.currentTimeMillis()));
+                    taskItem2.setIsFinish(0);
+                    mongoTemplate.save(taskItem2, "TaskItem");
 
                     TaskItem taskItem1 = new TaskItem();
-                    taskItem1.setTaskName("英语");
+                    taskItem1.setTaskName("强化阶段");
                     taskItem1.setParentId("0");
                     taskItem1.setWechatId(openid);
                     taskItem1.setCreateTime(new Date(System.currentTimeMillis()));
                     taskItem1.setIsFinish(0);
                     mongoTemplate.save(taskItem1, "TaskItem");
 
-                    TaskItem taskItem2 = new TaskItem();
-                    taskItem2.setParentId("0");
-                    taskItem2.setTaskName("政治");
-                    taskItem2.setWechatId(openid);
-                    taskItem2.setCreateTime(new Date(System.currentTimeMillis()));
-                    taskItem2.setIsFinish(0);
-                    mongoTemplate.save(taskItem2, "TaskItem");
+                    TaskItem taskItem = new TaskItem();
+                    taskItem.setCreateTime(new Date(System.currentTimeMillis()));
+                    taskItem.setParentId("0");
+                    taskItem.setTaskName("基础阶段");
+                    taskItem.setWechatId(record.getOpenId());
+                    taskItem.setIsFinish(0);
+                    mongoTemplate.save(taskItem, "TaskItem");
 
-                    TaskItem taskItem3 = new TaskItem();
-                    taskItem3.setParentId("0");
-                    taskItem3.setTaskName("专业课");
-                    taskItem3.setWechatId(openid);
-                    taskItem3.setCreateTime(new Date(System.currentTimeMillis()));
-                    taskItem3.setIsFinish(0);
-                    mongoTemplate.save(taskItem3, "TaskItem");
 
                     // 给新用户设置初始倒计时
                     CountDown countDown = new CountDown();

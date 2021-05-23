@@ -29,10 +29,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @ClassName: TaskServiceImpl
@@ -113,7 +111,7 @@ public class TaskServiceImpl implements TaskService {
         Query query = Query.query(criteria)
                 .with(Sort.by(
                         Sort.Order.asc("isFinish"),
-                        Sort.Order.desc("createTime")));
+                        Sort.Order.desc("_id")));
         List<TaskItem> taskItemList = mongoTemplate.find(query, TaskItem.class);
         if (ObjectUtils.isEmpty(taskItemList)) {
             return Result.success(null);
@@ -156,8 +154,12 @@ public class TaskServiceImpl implements TaskService {
 
             responses.add(tmp);
         }
+        List<TaskResponse> taskResponseList = responses
+                .stream()
+                .sorted(Comparator.comparing(TaskResponse::getId).reversed())
+                .collect(Collectors.toList());
 
-        return Result.success(responses);
+        return Result.success(taskResponseList);
     }
 
     /**

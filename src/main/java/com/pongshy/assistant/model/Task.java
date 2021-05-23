@@ -49,10 +49,15 @@ public class Task {
         BeanUtils.copyProperties(taskItem, task);
         task.setEndTime(taskItem.getEndTime());
         task.setStartTime(taskItem.getStartTime());
-        if (taskItem.getTag().getTag_name() != null) {
-            this.tag.setTag_name(taskItem.getTag().getTag_name());
+        if (taskItem.getTag() !=null) {
+            if (taskItem.getTag().getTag_name() != null) {
+                if (this.tag == null) {
+                    this.tag = new TagResponse();
+                }
+                this.tag.setTag_name(taskItem.getTag().getTag_name());
+            }
+            this.tag.setColor(taskItem.getTag().getColor());
         }
-        this.tag.setColor(taskItem.getTag().getColor());
         children.add(task);
     }
 
