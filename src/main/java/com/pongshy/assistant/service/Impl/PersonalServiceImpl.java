@@ -60,7 +60,7 @@ public class PersonalServiceImpl implements PersonalService {
     @Override
     public Result getPersonalInformation(String openid) {
         PersonalResponse response = new PersonalResponse();
-        Query query = Query.query(Criteria.where("wechatId").is(openid));
+        Query query = Query.query(Criteria.where("wechatId").is(openid).and("parentId").ne("0"));
         Query query2 = Query.query(Criteria.where("_id").is(openid));
         UserInfo userInfo = mongoTemplate.findOne(query2, UserInfo.class);
         List<TaskItem> taskItemList = mongoTemplate.find(query, TaskItem.class);
@@ -100,6 +100,7 @@ public class PersonalServiceImpl implements PersonalService {
                     Criteria.where("wechatId").is(openid)
                             .and("startTime").lte(now)
                             .and("endTime").gte(now)
+                            .and("parentId").ne("0")
             )
                     .with(Sort.by(Sort.Order.desc("createTime")));
             List<TaskItem> tmp_task = mongoTemplate.find(query1, TaskItem.class);
