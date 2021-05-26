@@ -104,10 +104,11 @@ public class HomePageServiceImpl implements HomePageService {
      * @Date: 2021/4/30 23:02
      */
     @Override
-    public Result insertSentence(String sentence) {
+    public Result insertSentence(String sentence, Integer sentiment) {
         SoulSoup soulSoup = new SoulSoup();
 
         soulSoup.setSentence(sentence);
+        soulSoup.setSentiment(sentiment);
         mongoTemplate.save(soulSoup, "SoulSoup");
         return Result.success("插入成功");
     }

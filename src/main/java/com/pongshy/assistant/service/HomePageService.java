@@ -39,7 +39,7 @@ public interface HomePageService {
      * @Author: pongshy
      * @Date: 2021/4/30 23:02
      */
-    Result insertSentence(String sentence);
+    Result insertSentence(String sentence, Integer sentiment);
 
     /*
      * @Description: 获取心灵鸡汤

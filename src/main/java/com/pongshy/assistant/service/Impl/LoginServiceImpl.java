@@ -81,6 +81,7 @@ public class LoginServiceImpl implements LoginService {
                 Query query = Query.query(Criteria.where("openId").is(openid));
                 List<UserInfo> userList = mongoTemplate.find(query, UserInfo.class);
 //                UserDO userDO = userDOMapper.selectByPrimaryKey(openid);
+                LoginResponse loginResponse = new LoginResponse();
                 if (userList.size() == 0) {
                     UserInfo record = new UserInfo();
 
@@ -131,8 +132,9 @@ public class LoginServiceImpl implements LoginService {
 //                    if (userDOMapper.insertSelective(record) == 0) {
 //                        throw new AllException(EmAllException.DATABASE_ERROR, "数据库操作异常");
 //                    }
+                    loginResponse.setIsNew(1);
                 }
-                LoginResponse loginResponse = new LoginResponse();
+
                 loginResponse.setOpenid(openid);
                 loginResponse.setSession_key(session_key);
 //                return Result.success((Object) openid);

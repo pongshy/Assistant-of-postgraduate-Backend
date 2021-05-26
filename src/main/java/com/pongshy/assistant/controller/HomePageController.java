@@ -71,7 +71,7 @@ public class HomePageController {
     @ApiOperation(value = "增加心灵鸡汤")
     @PostMapping("/addsen")
     public Result insertSentence(@RequestBody SentenceRequest sentenceRequest) {
-        return homePageService.insertSentence(sentenceRequest.getSentence());
+        return homePageService.insertSentence(sentenceRequest.getSentence(), sentenceRequest.getSentiment());
     }
 
     /*

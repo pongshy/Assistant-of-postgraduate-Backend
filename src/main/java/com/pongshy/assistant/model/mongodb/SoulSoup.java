@@ -15,6 +15,8 @@ public class SoulSoup {
     @Id
     private String id;
 
+    private Integer sentiment;
+
     private String sentence;
 
     public String getId() {
@@ -23,6 +25,14 @@ public class SoulSoup {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Integer getSentiment() {
+        return sentiment;
+    }
+
+    public void setSentiment(Integer sentiment) {
+        this.sentiment = sentiment;
     }
 
     public String getSentence() {

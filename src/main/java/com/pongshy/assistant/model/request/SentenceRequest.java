@@ -13,4 +13,6 @@ public class SentenceRequest {
 
 
     private String sentence;
+
+    private Integer sentiment;
 }

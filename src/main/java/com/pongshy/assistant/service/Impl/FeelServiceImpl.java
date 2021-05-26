@@ -71,8 +71,8 @@ public class FeelServiceImpl implements FeelService {
         }
         record.setSentiment(sentiment);
         // 获取句子
-        Query query1 = Query.query(Criteria.where("id").exists(true));
-        List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
+        Query query1 = Query.query(Criteria.where("id").exists(true).and("sentiment").is(sentiment));
+        List<SoulSoup> soups = mongoTemplate.find(query1, SoulSoup.class);
         long count = mongoTemplate.count(query1, SoulSoup.class);
         Random random = new Random(System.currentTimeMillis());
 
@@ -143,8 +143,8 @@ public class FeelServiceImpl implements FeelService {
                     ApiTool.getFeeling(ApiTool.access_token, request.getWords())
             );
             // 修改句子
-            Query query1 = Query.query(Criteria.where("id").exists(true));
-            List<SoulSoup> soups = mongoTemplate.findAll(SoulSoup.class);
+            Query query1 = Query.query(Criteria.where("id").exists(true).and("sentiment").is(sentiment));
+            List<SoulSoup> soups = mongoTemplate.find(query1, SoulSoup.class);
             long count = mongoTemplate.count(query1, SoulSoup.class);
             Random random = new Random(System.currentTimeMillis());
 
