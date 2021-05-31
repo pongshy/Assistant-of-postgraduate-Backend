@@ -25,6 +25,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -133,6 +134,13 @@ public class LoginServiceImpl implements LoginService {
 //                        throw new AllException(EmAllException.DATABASE_ERROR, "数据库操作异常");
 //                    }
                     loginResponse.setIsNew(1);
+                } else {
+                    UserInfo userInfo = userList.get(0);
+                    if (ObjectUtils.isEmpty(userInfo.getWname())) {
+                        loginResponse.setIsNew(1);
+                    } else {
+                        loginResponse.setIsNew(0);
+                    }
                 }
 
                 loginResponse.setOpenid(openid);

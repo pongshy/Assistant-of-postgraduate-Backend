@@ -76,7 +76,7 @@ public class PersonalServiceImpl implements PersonalService {
 //            response.setIsLogin(0);
             return Result.success(response);
         }
-        if (userInfo.getWname() == null || userInfo.getWimage() == null) {
+        if (ObjectUtils.isEmpty(userInfo.getWname()) || ObjectUtils.isEmpty(userInfo.getWimage())) {
             return Result.success(response);
         }
         response.setImageUrl(userInfo.getWimage());

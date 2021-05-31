@@ -25,6 +25,6 @@ public class PersonalResponse {
 
     private Double percent = 0.0;
 
-    private Integer isLogin = 0;
+    private Integer isLogin = 0;    // 1表示已登录，0表示未登录
 
 }
