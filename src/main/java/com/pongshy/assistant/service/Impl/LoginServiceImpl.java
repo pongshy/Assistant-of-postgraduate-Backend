@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.pongshy.assistant.exception.AllException;
 import com.pongshy.assistant.exception.EmAllException;
 import com.pongshy.assistant.model.Result;
+import com.pongshy.assistant.model.Tag;
 import com.pongshy.assistant.model.mongodb.CountDown;
 import com.pongshy.assistant.model.mongodb.TaskItem;
 import com.pongshy.assistant.model.mongodb.UserInfo;
@@ -89,6 +90,8 @@ public class LoginServiceImpl implements LoginService {
                     record.setOpenId(openid);
                     mongoTemplate.save(record, "UserInfo");
 
+                    Tag tag = new Tag();
+                    tag.setColor("green");
                     // 设置模板
                     TaskItem taskItem3 = new TaskItem();
                     taskItem3.setParentId("0");
@@ -96,6 +99,8 @@ public class LoginServiceImpl implements LoginService {
                     taskItem3.setWechatId(openid);
                     taskItem3.setCreateTime(new Date(System.currentTimeMillis()));
                     taskItem3.setIsFinish(0);
+                    taskItem3.setPriority(3);
+                    taskItem3.setTag(tag);
                     mongoTemplate.save(taskItem3, "TaskItem");
 
                     TaskItem taskItem2 = new TaskItem();
@@ -104,6 +109,8 @@ public class LoginServiceImpl implements LoginService {
                     taskItem2.setWechatId(openid);
                     taskItem2.setCreateTime(new Date(System.currentTimeMillis()));
                     taskItem2.setIsFinish(0);
+                    taskItem2.setPriority(3);
+                    taskItem2.setTag(tag);
                     mongoTemplate.save(taskItem2, "TaskItem");
 
                     TaskItem taskItem1 = new TaskItem();
@@ -112,6 +119,8 @@ public class LoginServiceImpl implements LoginService {
                     taskItem1.setWechatId(openid);
                     taskItem1.setCreateTime(new Date(System.currentTimeMillis()));
                     taskItem1.setIsFinish(0);
+                    taskItem1.setPriority(3);
+                    taskItem1.setTag(tag);
                     mongoTemplate.save(taskItem1, "TaskItem");
 
                     TaskItem taskItem = new TaskItem();
@@ -120,6 +129,8 @@ public class LoginServiceImpl implements LoginService {
                     taskItem.setTaskName("基础阶段");
                     taskItem.setWechatId(record.getOpenId());
                     taskItem.setIsFinish(0);
+                    taskItem.setPriority(3);
+                    taskItem.setTag(tag);
                     mongoTemplate.save(taskItem, "TaskItem");
 
 
